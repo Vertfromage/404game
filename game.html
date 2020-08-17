@@ -14,6 +14,21 @@
             // update k[keyCode] if any other key is pressed/released
             onkeydown = onkeyup = e => k[e.which] = self['lld*rlurdu'[e.which % 32 % 17]] = e.type[5]
 
+            function makeRect(x, y, width, height, speed, color) {
+                if (!color) color = '#000000';
+                return {
+                    x: x,
+                    y: y,
+                    w: width,
+                    h: height,
+                    s: speed,
+                    c: color,
+                    draw: function () {
+                        c.fillStyle = this.c;
+                        c.fillRect(this.x, this.y, this.w, this.h);
+                    }
+                };
+            }
             function makeEllipse(x, y, width, height, speed, color) {
                 if (!color) color = '#000000';
                 return {
@@ -97,8 +112,8 @@
             }
 
             function ballMove(x, y) {
-                if ((ball.x > x + ball.s || ball.x < x - ball.s) 
-                || (ball.y > y + ball.s || ball.y < y - ball.s)) {
+                if ((ball.x > x + ball.s || ball.x < x - ball.s)
+                    || (ball.y > y + ball.s || ball.y < y - ball.s)) {
                     if (ball.x != x) {
                         if (x > ball.x) {
                             ball.x += ball.s;

@@ -1,0 +1,115 @@
+<body style=margin:0>
+    <canvas id=a>
+        <script>
+            // initialize 2D canvas (c)
+            // initialize game state (s)
+            // initialize keys states (u,r,d,l for directions, k for all the keyboard)
+            c = a.getContext`2d`, k = [u = r = d = l = s = 0]
+
+            // (initialize your global variables here)
+            c.width = document.documentElement.clientWidth;
+            c.height = document.documentElement.clientHeight;
+
+            // update u,l,d,r globals when an arrow key/wasd/zqsd is pressed or released
+            // update k[keyCode] if any other key is pressed/released
+            onkeydown = onkeyup = e => k[e.which] = self['lld*rlurdu'[e.which % 32 % 17]] = e.type[5]
+
+            function makeEllipse(x, y, width, height, speed, color) {
+                if (!color) color = '#000000';
+                return {
+                    x: x,
+                    y: y,
+                    w: width,
+                    h: height,
+                    s: speed,
+                    c: color,
+                    draw: function () {
+                        c.fillStyle = this.c;
+                        c.beginPath();
+                        c.ellipse(this.x, this.y, this.w / 2, this.h / 2, 0, 0, 2 * Math.PI);
+                        c.strokeStyle = this.c;
+                        c.stroke();
+                        c.fill();
+                    }
+                };
+            }
+            var ballLength = 0.08 * c.width;
+            var ballSpeed = 1;
+            var ball = makeEllipse(0, 0, ballLength, ballLength, ballSpeed, '#FFA62F');
+            // start game loop (60fps)
+            // the canvas is cleared and adjusted to fullscreen at each frame
+            // draw each screen in the switch's cases
+            // in each screen, you can make key presses update the game state
+            // ex: "press enter to open the menu" => `if(k[13])s=1;`
+            setInterval(e => {
+                a.width = innerWidth, a.height = innerHeight;
+                switch (s) {
+                    case 0: title();
+                        break;
+                    case 1: game();
+                        break;
+                    case 2: // ex: draw game board
+                        break;
+                    case 3: // ex: draw game over screen
+                        break;
+                }
+            }, 16)
+
+            // handle click/touch events
+            // globals x and y contain the pointer's coordinates
+            // in each screen, you can make a click update the game state
+            // ex: "game over if we click on the bottom half of the screen" => `if(y>h/2)s=3;`
+            onclick = e => {
+                x = e.pageX; y = e.pageY;
+                switch (s) {
+                    case 0: if (y > c.h / 2) s = 1;
+                        break;
+                    case 1: ballMove(x, y);
+                        break;
+                    case 2: // react to clicks on screen 2
+                        break;
+                    case 3: // react to clicks on screen 3
+                        break;
+                }
+            }
+            //scenes
+            // Title
+            function title() {
+                c.w = document.documentElement.clientWidth;
+                c.h = document.documentElement.clientHeight;
+                c.font = '60px Arial';
+                c.textAlign = 'center';
+                c.fillStyle = '#FFA62F';
+                c.fillText('Robot Mission 404', c.w / 2, c.h / 4);
+            }
+
+            function game() {
+                c.w = document.documentElement.clientWidth;
+                c.h = document.documentElement.clientHeight;
+                c.font = '60px Arial';
+                c.textAlign = 'center';
+                c.fillStyle = '#FFA62F';
+                c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
+                ball.draw();
+            }
+
+            function ballMove(x, y) {
+                while (ball.x != x || ball.y != y) {
+                        if (ball.x != x) {
+                            if (x > ball.x) {
+                                ball.x += ball.s;
+                            } else {
+                                ball.x -= ball.s;
+                            }
+                        } if (ball.y != y) {
+                            if (y > ball.y) {
+                                ball.y += ball.s;
+                            } else {
+                                ball.y -= ball.s;
+                            }
+                        }
+                    }
+            }
+
+
+        </script>

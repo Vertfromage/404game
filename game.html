@@ -1,3 +1,7 @@
+<!-- Resources used -->
+<!-- https://gist.github.com/xem/a7ff7215375520d89b73beeabd7b16bd -->
+<!-- https://www.emanueleferonato.com/2014/01/17/creation-of-an-html5-tile-based-platform-game-with-no-engines-behind-pure-code/ -->
+
 <body style=margin:0>
     <canvas id=a>
         <script>
@@ -29,30 +33,32 @@
                     }
                 };
             }
-            function makeEllipse(x, y, width, height, speed, color) {
-                if (!color) color = '#000000';
-                return {
-                    x: x,
-                    y: y,
-                    w: width,
-                    h: height,
-                    s: speed,
-                    c: color,
-                    draw: function () {
-                        c.fillStyle = this.c;
-                        c.beginPath();
-                        c.ellipse(this.x, this.y, this.w / 2, this.h / 2, 0, 0, 2 * Math.PI);
-                        c.strokeStyle = this.c;
-                        c.stroke();
-                        c.fill();
-                    }
-                };
-            }
-            var ballLength = 0.08 * c.width;
+            
+            
             var ballSpeed = 4;
-            var ball = makeEllipse(0, 0, ballLength, ballLength, ballSpeed, '#FFA62F');
+            var ballLength = 0.05 * c.width;
+            var ball = makeRect(0, 0, ballLength, ballLength, ballSpeed, '#FFA62F');
             var toX;
             var toY;
+
+            var levelCols = 16;// level width, in tiles
+            var levelRows = 8;// level height, in tiles
+            var playerCol = 14; // player starting column
+            var playerRow = 6; // player starting row
+            var playerXSpeed = 0;      // player horizontal speed, in pixels per frame
+            var playerYSpeed = 0;   // player vertical speed, in pixels per frame
+            
+            var level = [        						// the 16x9 level - 1=wall, 0=empty space
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                ];
+            
             // start game loop (60fps)
             // the canvas is cleared and adjusted to fullscreen at each frame
             // draw each screen in the switch's cases
@@ -63,7 +69,11 @@
                 switch (s) {
                     case 0: title();
                         break;
-                    case 1: street(); if(k[13])s=2;
+                    case 1: street(); if (k[13]) {
+                        ball.y = playerRow * c.w / 16;				// converting Y player position from tiles to pixels
+                        ball.x = playerCol *= c.w / 16;
+                        s = 2;
+                    }
                         break;
                     case 2: inside();
                         break;
@@ -111,19 +121,81 @@
                 c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
                 c.font = '30px Arial';
                 c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
-                ballMove(toX, toY);
+                touchMove(toX, toY);
+                //keyMove();
                 ball.draw();
             }
 
-            function inside(){
+            function inside() {
+                c.w = document.documentElement.clientWidth;
+                c.h = document.documentElement.clientHeight;
+
                 c.font = '60px Arial';
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
-                c.fillText('Inside', c.w / 2, c.h / 6);
+                c.fillText('Inside', c.w / 2, c.h / 2);
                 //ToDo
+                inR();
+                //player
+                ball.h = ball.w = c.w / 16;
+                keyMove();
+                bump();
+                ball.draw();
+
+            }
+            function inR() {
+                var tileSize = c.w / 16;
+                // converting X player position from tiles to pixels
+
+                c.width = tileSize * levelCols;                   // canvas width. Won't work without it even if you style it from CSS
+                c.height = tileSize * levelRows; // canvas height. Same as before
+
+                c.fillStyle = "#ff0000";
+                for (i = 0; i < levelRows; i++) {
+                    for (j = 0; j < levelCols; j++) {
+                        if (level[i][j] == 1) {
+                            c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
+                        }
+                    }
+                }
+
+            }
+            function bump() {
+                // check for horizontal collisions
+                var tileSize = c.w / 16;
+                var baseCol = Math.floor(ball.x / tileSize);
+                var baseRow = Math.floor(ball.y / tileSize);
+                var colOverlap = ball.x % tileSize;
+                var rowOverlap = ball.y % tileSize;
+
+
+                if ((level[baseRow][baseCol + 1] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow + 1][baseCol] && rowOverlap)) {
+                    ball.x = (baseCol * tileSize);
+                }
+                if ((!level[baseRow][baseCol + 1] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow + 1][baseCol] && rowOverlap)) {
+                    ball.x = ((baseCol + 1) * tileSize);
+                }
+
+                // check for vertical collisions
+
+                if ((level[baseRow + 1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow][baseCol + 1] && colOverlap)) {
+                    ball.y = (baseRow * tileSize);
+                }
+
+                if ((!level[baseRow + 1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow][baseCol + 1] && colOverlap)) {
+                    ball.y = ((baseRow + 1) * tileSize);
+                }
+
             }
 
-            function ballMove(x, y) {
+            function keyMove() {
+                if (u) { ball.y -= ball.s; };
+                if (d) { ball.y += ball.s; };
+                if (r) { ball.x += ball.s; };
+                if (l) { ball.x -= ball.s; };
+            }
+
+            function touchMove(x, y) {
                 if ((ball.x > x + ball.s || ball.x < x - ball.s)
                     || (ball.y > y + ball.s || ball.y < y - ball.s)) {
                     if (ball.x != x) {

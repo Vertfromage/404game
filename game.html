@@ -34,8 +34,10 @@
                 };
             }
             var ballLength = 0.08 * c.width;
-            var ballSpeed = 1;
+            var ballSpeed = 4;
             var ball = makeEllipse(0, 0, ballLength, ballLength, ballSpeed, '#FFA62F');
+            var toX;
+            var toY;
             // start game loop (60fps)
             // the canvas is cleared and adjusted to fullscreen at each frame
             // draw each screen in the switch's cases
@@ -64,7 +66,7 @@
                 switch (s) {
                     case 0: if (y > c.h / 2) s = 1;
                         break;
-                    case 1: ballMove(x, y);
+                    case 1: toX = x; toY = y;
                         break;
                     case 2: // react to clicks on screen 2
                         break;
@@ -90,25 +92,27 @@
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
                 c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
+                ballMove(toX, toY);
                 ball.draw();
             }
 
             function ballMove(x, y) {
-                while (ball.x != x || ball.y != y) {
-                        if (ball.x != x) {
-                            if (x > ball.x) {
-                                ball.x += ball.s;
-                            } else {
-                                ball.x -= ball.s;
-                            }
-                        } if (ball.y != y) {
-                            if (y > ball.y) {
-                                ball.y += ball.s;
-                            } else {
-                                ball.y -= ball.s;
-                            }
+                if ((ball.x > x + ball.s || ball.x < x - ball.s) 
+                || (ball.y > y + ball.s || ball.y < y - ball.s)) {
+                    if (ball.x != x) {
+                        if (x > ball.x) {
+                            ball.x += ball.s;
+                        } else {
+                            ball.x -= ball.s;
+                        }
+                    } if (ball.y != y) {
+                        if (y > ball.y) {
+                            ball.y += ball.s;
+                        } else {
+                            ball.y -= ball.s;
                         }
                     }
+                }
             }
 
 

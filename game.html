@@ -63,9 +63,9 @@
                 switch (s) {
                     case 0: title();
                         break;
-                    case 1: game();
+                    case 1: street(); if(k[13])s=2;
                         break;
-                    case 2: // ex: draw game board
+                    case 2: inside();
                         break;
                     case 3: // ex: draw game over screen
                         break;
@@ -98,17 +98,29 @@
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
                 c.fillText('Robot Mission 404', c.w / 2, c.h / 4);
+                c.font = '30px Arial';
+                c.fillText('Click to go to street', c.w / 2, c.h / 2);
             }
 
-            function game() {
+            function street() {
                 c.w = document.documentElement.clientWidth;
                 c.h = document.documentElement.clientHeight;
                 c.font = '60px Arial';
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
                 c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
+                c.font = '30px Arial';
+                c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
                 ballMove(toX, toY);
                 ball.draw();
+            }
+
+            function inside(){
+                c.font = '60px Arial';
+                c.textAlign = 'center';
+                c.fillStyle = '#FFA62F';
+                c.fillText('Inside', c.w / 2, c.h / 6);
+                //ToDo
             }
 
             function ballMove(x, y) {

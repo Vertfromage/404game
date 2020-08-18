@@ -36,14 +36,16 @@
             // p for player
             var p = makeRect(c.width/2,c.height*.6, pL, pL, pS, '#FFA62F');
             var toX;
-            var toY;            
+            var toY;
+            // ToDo function to update story text according to events
+            var story = 'Mission: Enter 404 as 404 use 404 to 404.';            
 
             var level = [      // the 32x16 level - 1=wall, 0=empty space
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-                [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1],
+                [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -116,6 +118,7 @@
                 c.fillStyle = '#FFA62F';
                 c.fillText('Robot Mission 404', c.w / 2, c.h / 4);
                 c.font = '30px Arial';
+                c.fillStyle = '#000000';
                 c.fillText('Click to go to street', c.w / 2, c.h / 2);
             }
 
@@ -123,8 +126,13 @@
                 c.w = upC(0);
                 c.h = upC(1);
                 drawSt();
-                tx('Robot Mission 404', c.w / 2, c.h / 6);
-                tx('Press enter to go inside', c.w / 2, c.h / 2);
+                c.font = '60px Arial';
+                c.textAlign = 'center';
+                c.fillStyle = '#000000';
+                c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
+                c.fillStyle = '#FFA62F';
+                c.font = '30px Arial';
+                c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
                 if(ct>0){
                     touchMove(toX,toY);
                     ct--;
@@ -150,16 +158,16 @@
                 c.fillRect((3*c.width/5)+d, 2*c.height/3, c.width/20, c.height/12);
             }
             function tx(t,w,h){
-                c.font = '60px Arial';
+                c.font = '3vw Arial';
                 c.textAlign = 'center';
-                c.fillStyle = '#FFA62F';
+                c.fillStyle = '#FFFFFF';
                 c.fillText(t,w,h);
             }
 
             function inside() {
                 c.w = upC(0);
                 c.h = upC(1);
-                tx('Inside', c.w / 2, c.h / 2);
+                
                 //ToDo
                 inR();
                 //player
@@ -171,6 +179,8 @@
                 }
                 bump();
                 p.y += p.s;
+                
+                tx(story, c.w / 2, c.h *.07);
                 p.draw();
             }
             function inR() {

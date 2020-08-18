@@ -43,21 +43,19 @@
             // p for player
             var p = makeRect(c.width/2,c.height*.6, pL, pL, pS, '#FFA62F');
             var toX;
-            var toY;
-
-            
+            var toY;            
 
             var level = [      // the 32x16 level - 1=wall, 0=empty space
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
                 [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -109,18 +107,17 @@
                 }
             }
             function upC(x){
-                if(x=='w'){
+                if(x==0){
                     return document.documentElement.clientWidth;
-                }if(x=='h'){
+                }if(x==1){
                     return document.documentElement.clientHeight;
                 }
-
             }
             //scenes
             // Title
             function title() {
-                c.w = upC('w');
-                c.h = upC('h');
+                c.w = upC(0);
+                c.h = upC(1);
                 c.font = '60px Arial';
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
@@ -130,8 +127,8 @@
             }
 
             function street() {
-                c.w = upC('w');
-                c.h = upC('h');
+                c.w = upC(0);
+                c.h = upC(1);
                 drawSt();
                 tx('Robot Mission 404', c.w / 2, c.h / 6);
                 tx('Press enter to go inside', c.w / 2, c.h / 2);
@@ -143,8 +140,21 @@
                 p.draw();
             }
             function drawSt(){
+                let d = c.width/5/3;
                 c.fillStyle = '#000000';
-                c.fillRect(0, c.height/6, c.width, c.height/3);
+                c.fillRect(0, c.height/3, c.width, c.height/3);
+                c.fillStyle = '#FF66CC';
+                c.fillRect(0, 0, c.width/5, c.height/3);
+                c.fillRect(2*c.width/5, 0, c.width/5, c.height/3);
+                c.fillRect(4*c.width/5, 0, c.width/5, c.height/3);
+                c.fillRect(c.width/5, 2*c.height/3, c.width/5, c.height/3);
+                c.fillRect(3*c.width/5, 2*c.height/3, c.width/5, c.height/3);
+                c.fillStyle = '#FFFFFF';
+                c.fillRect(d, c.height/3-c.height/12, c.width/20, c.height/12);
+                c.fillRect((2*c.width/5)+d, c.height/3-c.height/12, c.width/20, c.height/12);
+                c.fillRect((4*c.width/5)+d, c.height/3-c.height/12, c.width/20, c.height/12);
+                c.fillRect((c.width/5)+d, 2*c.height/3, c.width/20, c.height/12);
+                c.fillRect((3*c.width/5)+d, 2*c.height/3, c.width/20, c.height/12);
             }
             function tx(t,w,h){
                 c.font = '60px Arial';
@@ -154,8 +164,8 @@
             }
 
             function inside() {
-                c.w = upC('w');
-                c.h = upC('h');
+                c.w = upC(0);
+                c.h = upC(1);
                 tx('Inside', c.w / 2, c.h / 2);
                 //ToDo
                 inR();
@@ -173,14 +183,16 @@
             function inR() {
                 var tileSize = c.w / levelCols;
                 // converting X player position from tiles to pixels
-
                 c.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
                 c.height = tileSize * levelRows; // canvas height. Same as before
 
-                c.fillStyle = "#ff0000";
                 for (i = 0; i < levelRows; i++) {
                     for (j = 0; j < levelCols; j++) {
                         if (level[i][j] == 1) {
+                            c.fillStyle = "#ff0000";
+                            c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
+                        }if (level[i][j] == 2) {
+                            c.fillStyle = "#E0115F";
                             c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
                         }
                     }

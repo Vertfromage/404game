@@ -8,4 +8,4 @@ Text should be at top, incase it gets cut off on full screen.
 
 Or text could be at the left side if we made the rooms smaller width wise.
 
-Need better touch controls
+Need better touch controls, make function same as key.

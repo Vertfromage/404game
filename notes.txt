@@ -5,3 +5,5 @@ Accidentally created rocket boots... character will keep going up if you hold th
 Accidentally created a situation where if you stand on a single block or on the edge of a platform you'll slip off, also worth keeping. 
 
 Text should be at top, incase it gets cut off on full screen.
+
+Or text could be at the left side if we made the rooms smaller width wise.

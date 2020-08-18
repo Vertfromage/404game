@@ -41,24 +41,32 @@
             var toX;
             var toY;
 
-            var levelCols = 16;// level width, in tiles
-            var levelRows = 8;// level height, in tiles
-            var playerCol = 14; // player starting column
-            var playerRow = 6; // player starting row
-            var playerXSpeed = 0;      // player horizontal speed, in pixels per frame
-            var playerYSpeed = 0;   // player vertical speed, in pixels per frame
+            var levelCols = 32;// level width, in tiles
+            var levelRows = 16;// level height, in tiles
+            var playerCol = 10; // player starting column
+            var playerRow = 5; // player starting row
             
-            var level = [        						// the 16x9 level - 1=wall, 0=empty space
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            var level = [      // the 32x16 level - 1=wall, 0=empty space
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 1],
+                    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                 ];
-            
+                // Note: If tight on space we could flip spots in the level to make different layouts. 
+                // use a [[i,j]] array for any changes and loop in reusable function.
+
             // start game loop (60fps)
             // the canvas is cleared and adjusted to fullscreen at each frame
             // draw each screen in the switch's cases
@@ -137,17 +145,17 @@
                 //ToDo
                 inR();
                 //player
-                ball.h = ball.w = c.w / 16;
+                ball.h = ball.w = c.w / levelCols;
                 keyMove();
                 bump();
                 ball.draw();
 
             }
             function inR() {
-                var tileSize = c.w / 16;
+                var tileSize = c.w / levelCols;
                 // converting X player position from tiles to pixels
 
-                c.width = tileSize * levelCols;                   // canvas width. Won't work without it even if you style it from CSS
+                c.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
                 c.height = tileSize * levelRows; // canvas height. Same as before
 
                 c.fillStyle = "#ff0000";
@@ -162,12 +170,11 @@
             }
             function bump() {
                 // check for horizontal collisions
-                var tileSize = c.w / 16;
+                var tileSize = c.w / levelCols;
                 var baseCol = Math.floor(ball.x / tileSize);
                 var baseRow = Math.floor(ball.y / tileSize);
                 var colOverlap = ball.x % tileSize;
                 var rowOverlap = ball.y % tileSize;
-
 
                 if ((level[baseRow][baseCol + 1] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow + 1][baseCol] && rowOverlap)) {
                     ball.x = (baseCol * tileSize);
@@ -175,17 +182,13 @@
                 if ((!level[baseRow][baseCol + 1] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow + 1][baseCol] && rowOverlap)) {
                     ball.x = ((baseCol + 1) * tileSize);
                 }
-
                 // check for vertical collisions
-
                 if ((level[baseRow + 1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow][baseCol + 1] && colOverlap)) {
                     ball.y = (baseRow * tileSize);
                 }
-
                 if ((!level[baseRow + 1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow][baseCol + 1] && colOverlap)) {
                     ball.y = ((baseRow + 1) * tileSize);
                 }
-
             }
 
             function keyMove() {

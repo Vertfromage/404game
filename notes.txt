@@ -1,0 +1,7 @@
+NOTES:
+
+Accidentally created rocket boots... character will keep going up if you hold the up button or click repeatedly above character. To disable rocket boots would be more complicated than keeping them, so seems like a good idea to keep them.
+
+Accidentally created a situation where if you stand on a single block or on the edge of a platform you'll slip off, also worth keeping. 
+
+Text should be at top, incase it gets cut off on full screen.

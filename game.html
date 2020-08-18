@@ -35,9 +35,9 @@
             }
 
             var count = 0;
-            var ballSpeed = 4;
-            var ballLength = 0.05 * c.width;
-            var ball = makeRect(0, 0, ballLength, ballLength, ballSpeed, '#FFA62F');
+            var pSpeed = 4;
+            var pLength = 0.05 * c.width;
+            var p = makeRect(0, 0, pLength, pLength, pSpeed, '#FFA62F');
             var toX;
             var toY;
 
@@ -78,8 +78,8 @@
                     case 0: title();
                         break;
                     case 1: street(); if (k[13]) {
-                        ball.y = playerRow * c.w / 16;				// converting Y player position from tiles to pixels
-                        ball.x = playerCol *= c.w / 16;
+                        p.y = playerRow * c.w / 16;				// converting Y player position from tiles to pixels
+                        p.x = playerCol *= c.w / 16;
                         s = 2;
                     }
                         break;
@@ -131,7 +131,7 @@
                 c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
                 touchMove(toX, toY);
                 //keyMove();
-                ball.draw();
+                p.draw();
             }
 
             function inside() {
@@ -145,15 +145,15 @@
                 //ToDo
                 inR();
                 //player
-                ball.h = ball.w = c.w / levelCols;
+                p.h = p.w = c.w / levelCols;
                 keyMove();
                 if(count>0){
                     touchMove(toX,toY);
                     count--;
                 }
                 bump();
-                ball.y += ball.s;
-                ball.draw();
+                p.y += p.s;
+                p.draw();
             }
             function inR() {
                 var tileSize = c.w / levelCols;
@@ -175,47 +175,47 @@
             function bump() {
                 // check for horizontal collisions
                 var tileSize = c.w / levelCols;
-                var baseCol = Math.floor(ball.x / tileSize);
-                var baseRow = Math.floor(ball.y / tileSize);
-                var colOverlap = ball.x % tileSize;
-                var rowOverlap = ball.y % tileSize;
+                var baseCol = Math.floor(p.x / tileSize);
+                var baseRow = Math.floor(p.y / tileSize);
+                var colOverlap = p.x % tileSize;
+                var rowOverlap = p.y % tileSize;
 
                 if ((level[baseRow][baseCol + 1] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow + 1][baseCol] && rowOverlap)) {
-                    ball.x = (baseCol * tileSize);
+                    p.x = (baseCol * tileSize);
                 }
                 if ((!level[baseRow][baseCol + 1] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow + 1][baseCol] && rowOverlap)) {
-                    ball.x = ((baseCol + 1) * tileSize);
+                    p.x = ((baseCol + 1) * tileSize);
                 }
                 // check for vertical collisions
                 if ((level[baseRow + 1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow][baseCol + 1] && colOverlap)) {
-                    ball.y = (baseRow * tileSize);
+                    p.y = (baseRow * tileSize);
                 }
                 if ((!level[baseRow + 1][baseCol] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow][baseCol + 1] && colOverlap)) {
-                    ball.y = ((baseRow + 1) * tileSize);
+                    p.y = ((baseRow + 1) * tileSize);
                 }
             }
 
             function keyMove() {
-                if (u) { ball.y -= ball.s * 5;};
-                if (d) { ball.y += ball.s; };
-                if (r) { ball.x += ball.s; };
-                if (l) { ball.x -= ball.s; };
+                if (u) { p.y -= p.s * 5;};
+                if (d) { p.y += p.s; };
+                if (r) { p.x += p.s; };
+                if (l) { p.x -= p.s; };
             }
 
             function touchMove(x, y) {
-                if ((ball.x > x + ball.s || ball.x < x - ball.s)
-                    || (ball.y > y + ball.s || ball.y < y - ball.s)) {
-                    if (ball.x != x) {
-                        if (x > ball.x) {
-                            ball.x += ball.s;
+                if ((p.x > x + p.s || p.x < x - p.s)
+                    || (p.y > y + p.s || p.y < y - p.s)) {
+                    if (p.x != x) {
+                        if (x > p.x) {
+                            p.x += p.s;
                         } else {
-                            ball.x -= ball.s;
+                            p.x -= p.s;
                         }
-                    } if (ball.y != y) {
-                        if (y > ball.y) {
-                            ball.y += ball.s;
+                    } if (p.y != y) {
+                        if (y > p.y) {
+                            p.y += p.s;
                         } else {
-                            ball.y -= ball.s*5;
+                            p.y -= p.s*5;
                         }
                     }
                 }

@@ -123,25 +123,23 @@
             function street() {
                 c.w = document.documentElement.clientWidth;
                 c.h = document.documentElement.clientHeight;
-                c.font = '60px Arial';
-                c.textAlign = 'center';
-                c.fillStyle = '#FFA62F';
-                c.fillText('Robot Mission 404', c.w / 2, c.h / 6);
-                c.font = '30px Arial';
-                c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
+                tx('Robot Mission 404', c.w / 2, c.h / 6);
+                tx('Press enter to go inside', c.w / 2, c.h / 2);
                 touchMove(toX, toY);
                 //keyMove();
                 p.draw();
+            }
+            function tx(t,w,h){
+                c.font = '60px Arial';
+                c.textAlign = 'center';
+                c.fillStyle = '#FFA62F';
+                c.fillText(t,w,h);
             }
 
             function inside() {
                 c.w = document.documentElement.clientWidth;
                 c.h = document.documentElement.clientHeight;
-
-                c.font = '60px Arial';
-                c.textAlign = 'center';
-                c.fillStyle = '#FFA62F';
-                c.fillText('Inside', c.w / 2, c.h / 2);
+                tx('Inside', c.w / 2, c.h / 2);
                 //ToDo
                 inR();
                 //player

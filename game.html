@@ -33,18 +33,19 @@
                     }
                 };
             }
-
-            var count = 0;
-            var pSpeed = 4;
-            var pLength = 0.05 * c.width;
-            var p = makeRect(0, 0, pLength, pLength, pSpeed, '#FFA62F');
+            var levelCols = 32;// level width, in tiles
+            var levelRows = 16;// level height, in tiles
+            var pCol = 10; // player starting column
+            var pRow = 5; // player starting row
+            var ct = 0;
+            var pS = 4;
+            var pL = c.width / levelCols;
+            // p for player
+            var p = makeRect(c.width/2,c.height*.6, pL, pL, pS, '#FFA62F');
             var toX;
             var toY;
 
-            var levelCols = 32;// level width, in tiles
-            var levelRows = 16;// level height, in tiles
-            var playerCol = 10; // player starting column
-            var playerRow = 5; // player starting row
+            
 
             var level = [      // the 32x16 level - 1=wall, 0=empty space
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -78,8 +79,8 @@
                     case 0: title();
                         break;
                     case 1: street(); if (k[13]) {
-                        p.y = playerRow * c.w / 16;				// converting Y player position from tiles to pixels
-                        p.x = playerCol *= c.w / 16;
+                        p.y = pRow * c.w / 16;				// converting Y player position from tiles to pixels
+                        p.x = pCol *= c.w / 16;
                         s = 2;
                     }
                         break;
@@ -99,19 +100,27 @@
                 switch (s) {
                     case 0: if (y > c.h / 2) s = 1;
                         break;
-                    case 1: toX = x; toY = y;
+                    case 1: toX = x; toY = y; ct=12;
                         break;
-                    case 2: toX = x; toY = y; count=12;
+                    case 2: toX = x; toY = y; ct=12;
                         break;
                     case 3: // react to clicks on screen 3
                         break;
                 }
             }
+            function upC(x){
+                if(x=='w'){
+                    return document.documentElement.clientWidth;
+                }if(x=='h'){
+                    return document.documentElement.clientHeight;
+                }
+
+            }
             //scenes
             // Title
             function title() {
-                c.w = document.documentElement.clientWidth;
-                c.h = document.documentElement.clientHeight;
+                c.w = upC('w');
+                c.h = upC('h');
                 c.font = '60px Arial';
                 c.textAlign = 'center';
                 c.fillStyle = '#FFA62F';
@@ -121,13 +130,21 @@
             }
 
             function street() {
-                c.w = document.documentElement.clientWidth;
-                c.h = document.documentElement.clientHeight;
+                c.w = upC('w');
+                c.h = upC('h');
+                drawSt();
                 tx('Robot Mission 404', c.w / 2, c.h / 6);
                 tx('Press enter to go inside', c.w / 2, c.h / 2);
-                touchMove(toX, toY);
-                //keyMove();
+                if(ct>0){
+                    touchMove(toX,toY);
+                    ct--;
+                }
+                keyMove();
                 p.draw();
+            }
+            function drawSt(){
+                c.fillStyle = '#000000';
+                c.fillRect(0, c.height/6, c.width, c.height/3);
             }
             function tx(t,w,h){
                 c.font = '60px Arial';
@@ -137,17 +154,17 @@
             }
 
             function inside() {
-                c.w = document.documentElement.clientWidth;
-                c.h = document.documentElement.clientHeight;
+                c.w = upC('w');
+                c.h = upC('h');
                 tx('Inside', c.w / 2, c.h / 2);
                 //ToDo
                 inR();
                 //player
                 p.h = p.w = c.w / levelCols;
                 keyMove();
-                if(count>0){
+                if(ct>0){
                     touchMove(toX,toY);
-                    count--;
+                    ct--;
                 }
                 bump();
                 p.y += p.s;
@@ -184,7 +201,6 @@
                 if ((!level[baseRow][baseCol + 1] && level[baseRow][baseCol]) || (!level[baseRow + 1][baseCol + 1] && level[baseRow + 1][baseCol] && rowOverlap)) {
                     p.x = ((baseCol + 1) * tileSize);
                 }
-                // check for vertical collisions
                 if ((level[baseRow + 1][baseCol] && !level[baseRow][baseCol]) || (level[baseRow + 1][baseCol + 1] && !level[baseRow][baseCol + 1] && colOverlap)) {
                     p.y = (baseRow * tileSize);
                 }

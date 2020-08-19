@@ -33,32 +33,34 @@ var levelRows = 16;// level height, in tiles
 var pCol = 1; // player starting column
 var pRow = 7; // player starting row
 var ct = 0;
+var ct2=0;
 var pS = 4;
 var pL = c.width / levelCols;
 // p for player
-pImg = new Image();	
+pImg = new Image();
 var p = sprite({
     context: c,
-    width: 374,
-    height: 25,
+    width: 350,
+    height: 70,
     image: pImg,
-    numberOfFrames: 11,
-    ticksPerFrame: 5,
-    x:pCol,
-    y:pRow,
-    s:pS
+    numberOfFrames: 5,
+    ticksPerFrame: 40,
+    x: pCol,
+    y: pRow,
+    s: pS
 });
-pImg.src = "robot.png"
-p.scaleRatio = 2;
+pImg.src = "robot2.png"
+p.scaleRatio = 1;
 // var p = makeRect(c.width / 2, c.height * .6, pL, pL, pS, '#FFA62F');
 var toX;
 var toY;
+var onOff = -1;
 
 var numnpcs = 5,
 
-npcs = [];
+    npcs = [];
 for (i = 0; i < numnpcs; i += 1) {
-	spawnnpc();
+    spawnnpc();
 }
 // ToDo function to update story text according to events
 var story = 'Mission: Enter 404 as 404 use 404 to 404.';
@@ -161,7 +163,7 @@ function street() {
         ct--;
     }
     keyMove();
-    p.update();
+    // p.update();
     //Note: To have better images don't use sprite sheets for movement just tween function
     // It requires less images, can use a sequence of frames/x/y movements instead
     p.render();
@@ -201,10 +203,10 @@ function inside() {
 
     //npc
     for (i = 0; i < npcs.length; i += 1) {
-		npcs[i].update();
-		npcs[i].render();
+        npcs[i].update();
+        npcs[i].render();
     }
-    p.update();
+    // p.update();
     //Note: To have better images don't use sprite sheets for movement just tween functions
     // It requires less images, so we can have better quality 
     p.render();
@@ -232,7 +234,7 @@ function inR() {
             if (level[i][j] == 1) {
                 c.fillStyle = "#ff0000";
                 c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
-            } if (level[i][j] == 2&& nI<numnpcs) {
+            } if (level[i][j] == 2 && nI < numnpcs) {
                 npcs[nI].x = j * tileSize; npcs[nI].y = i * tileSize;
                 nI++;
             }
@@ -262,14 +264,15 @@ function bump() {
     }
 }
 
-function sprite (options) {
-  
+function sprite(options) {
+
     var that = {},
         frameIndex = 0,
         tickCount = 0,
+        spot = 0,
         ticksPerFrame = options.ticksPerFrame || 0,
         numberOfFrames = options.numberOfFrames || 1;
-    
+
     that.context = options.context;
     that.w = options.width;
     that.h = options.height;
@@ -278,11 +281,16 @@ function sprite (options) {
     that.image = options.image;
     that.scaleRatio = 1;
     that.s = options.s;
+    that.seq = [];
+    
     // ToDo: that.sequence 
     // choose frames/movements (should be able to update depending on sequence)
     // replaces update with a tween like sprite animation
     // should change frame index according to sequence instead of looping spritesheet
-    
+    that.switch =function(i){
+        frameIndex=i;
+    };
+
     that.update = function () {
 
         tickCount += 1;
@@ -290,64 +298,72 @@ function sprite (options) {
         if (tickCount > ticksPerFrame) {
 
             tickCount = 0;
-            
+
             // If the current frame index is in range
-            if (frameIndex < numberOfFrames - 1) {	
+            if (frameIndex < numberOfFrames - 1) {
                 // Go to the next frame
                 frameIndex += 1;
+                if (that.seq.length > 0) {
+                    frameIndex = that.seq[spot];
+                    spot += 1;
+                    console.log(frameIndex);
+                }
             } else {
                 frameIndex = 0;
             }
+            if(spot > that.seq.length - 1){
+                spot=0;
+            }
         }
     };
-    
+
     that.render = function () {
 
-      // Draw the animation
-      that.context.drawImage(
-        that.image,
-        frameIndex * that.w / numberOfFrames,
-        0,
-        that.w / numberOfFrames,
-        that.h,
-        that.x,
-        that.y,
-        that.w / numberOfFrames * that.scaleRatio,
-        that.h * that.scaleRatio);
+        // Draw the animation
+        that.context.drawImage(
+            that.image,
+            frameIndex * that.w / numberOfFrames,
+            0,
+            that.w / numberOfFrames,
+            that.h,
+            that.x,
+            that.y,
+            that.w / numberOfFrames * that.scaleRatio,
+            that.h * that.scaleRatio);
     };
-    
+
     that.getFrameWidth = function () {
         return that.w / numberOfFrames;
     };
-    
+
     return that;
 }
 
-function spawnnpc () {
-  
-  var npcIndex,
-      npcImg;
+function spawnnpc() {
 
-  // Create sprite sheet
-  npcImg = new Image();	
+    var npcIndex,
+        npcImg;
 
-  npcIndex = npcs.length;
-  
-  // Create sprite
-  npcs[npcIndex] = sprite({
-      context: c,
-      width: 600,
-      height: 100,
-      image: npcImg,
-      numberOfFrames: 6,
-      ticksPerFrame: 5
-  });
-  //random location
-  npcs[npcIndex].x = 0;
-  npcs[npcIndex].y = 0;
-  npcs[npcIndex].scaleRatio = .5;
-  // Load sprite sheet
-  npcImg.src = "bluewiggle.png";
+    // Create sprite sheet
+    npcImg = new Image();
+
+    npcIndex = npcs.length;
+
+    // Create sprite
+    npcs[npcIndex] = sprite({
+        context: c,
+        width: 600,
+        height: 100,
+        image: npcImg,
+        numberOfFrames: 6,
+        ticksPerFrame: 5
+    });
+    //random location
+    npcs[npcIndex].x = 0;
+    npcs[npcIndex].y = 0;
+    npcs[npcIndex].scaleRatio = .5;
+    // Load sprite sheet
+    npcImg.src = "bluewiggle.png";
 }
 
 
@@ -360,10 +376,17 @@ function spawnnpc () {
 // }
 
 function keyMove() {
-    if (u) { p.y -= p.s * 5; };
-    if (d) { p.y += p.s; };
-    if (r) { p.x += p.s; };
-    if (l) { p.x -= p.s; };
+    if (u) { p.y -= p.s * 5;p.switch(4);};
+    if (d) { p.y += p.s; p.switch(4);};
+    if (r) { p.x += p.s; p.switch(3);};
+    if (l) { p.x -= p.s; p.switch(2);};
+    if(u&&r){ p.switch(1);};
+    if(u&&l){ p.switch(0);};
+    if(!u&&!d&&!r&&!l){
+            p.seq = [1,0];
+            p.update();
+            p.seq =[];
+        };
 }
 
 function touchMove(x, y) {

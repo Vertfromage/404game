@@ -11,3 +11,10 @@ Or text could be at the left side if we made the rooms smaller width wise.
 Need better touch controls, make function same as key.
 
 Layout: 3/4 screen for platformer, 1/4 screen for adventure text
+
+In sprite Update should be replaced with a version that loops through a sequence of frames, 
+that way all the sprites can be in one or two sprite sheets.
+
+Also we should have a basic tween function inside sprite to change
+stuff like x,y, direction Ex: idle (move up/down left/right in loop), goTo(move toward player),
+run (move away from player), should call tween from update? 

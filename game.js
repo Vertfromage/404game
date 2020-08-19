@@ -224,6 +224,14 @@
                 }
             }
 
+            // [{x:14,y:12,w:c.w / levelCols},{x:4,y:2,w:c.w / levelCols}];
+
+            //     //ToDO
+            // charCollision(p, npcArray){
+            //     //loop through array
+            //     // Check for colision using x/y and thickness.
+            // }
+
             function keyMove() {
                 if (u) { p.y -= p.s * 5;};
                 if (d) { p.y += p.s; };

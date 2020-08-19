@@ -30,8 +30,8 @@ function makeRect(x, y, width, height, speed, color) {
 var gameOver = false;
 var levelCols = 32;// level width, in tiles
 var levelRows = 16;// level height, in tiles
-var pCol = 10; // player starting column
-var pRow = 5; // player starting row
+var pCol = 1; // player starting column
+var pRow = 7; // player starting row
 var ct = 0;
 var pS = 4;
 var pL = c.width / levelCols;
@@ -162,6 +162,8 @@ function street() {
     }
     keyMove();
     p.update();
+    //Note: To have better images don't use sprite sheets for movement just tween function
+    // It requires less images, can use a sequence of frames/x/y movements instead
     p.render();
 }
 function drawSt() {
@@ -203,6 +205,8 @@ function inside() {
 		npcs[i].render();
     }
     p.update();
+    //Note: To have better images don't use sprite sheets for movement just tween functions
+    // It requires less images, so we can have better quality 
     p.render();
 
     keyMove();
@@ -274,6 +278,10 @@ function sprite (options) {
     that.image = options.image;
     that.scaleRatio = 1;
     that.s = options.s;
+    // ToDo: that.sequence 
+    // choose frames/movements (should be able to update depending on sequence)
+    // replaces update with a tween like sprite animation
+    // should change frame index according to sequence instead of looping spritesheet
     
     that.update = function () {
 

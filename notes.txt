@@ -21,3 +21,6 @@ run (move away from player), should call tween from update?
 
 Possible ways to make him shoot on mobile: swipe in the direction you want to shoot (have to check for swipe)
 Shoot button, tap on robot (next tap is direction)
+
+Might use https://opengameart.org/content/pixel-character-0
+https://opengameart.org/content/pixel-art-adventurer-sprites

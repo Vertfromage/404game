@@ -63,6 +63,7 @@ var numnpcs = 5,
     npcs = [];
 for (i = 0; i < numnpcs; i += 1) {
     spawnnpc();
+    npcs[i].seq = [0,0,1,1,2,2,1,1];
 }
 // ToDo function to update story text according to events
 var story = 'Mission: Enter 404 as 404 use 404 to 404.';
@@ -210,6 +211,9 @@ function inside() {
     //Note: To have better images don't use sprite sheets for movement just tween functions
     // It requires less images, so we can have better quality 
     p.render();
+    if(l||r||u||d){
+        touch=false;
+    }
     if(!touch){keyMove();}
     if (touch&&!done) {touchMove(toX, toY);} else{
         p.y += p.s;
@@ -349,19 +353,19 @@ function spawnnpc() {
     // Create sprite
     npcs[npcIndex] = sprite({
         context: c,
-        width: 600,
-        height: 100,
+        width: 256,
+        height: 32,
         image: npcImg,
-        numberOfFrames: 6,
+        numberOfFrames: 8,
         ticksPerFrame: 5
     });
-    //random location
     npcs[npcIndex].x = 0;
     npcs[npcIndex].y = 0;
-    npcs[npcIndex].scaleRatio = .5;
+    npcs[npcIndex].scaleRatio = 1.5;
     // Load sprite sheet
-    npcImg.src = "bluewiggle.png";
+    npcImg.src = "man.png";
 }
+
 
 
 // [{x:14,y:12,w:c.w / levelCols},{x:4,y:2,w:c.w / levelCols}];
@@ -409,6 +413,5 @@ function touchMove(x, y) {
     }else{
     done=true;
     touch=false;
-    console.log("done touch");
 }
 }

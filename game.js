@@ -36,6 +36,8 @@ var ct = 0;
 var ct2=0;
 var pS = 4;
 var pL = c.width / levelCols;
+var touch = true;
+var done = true;
 // p for player
 pImg = new Image();
 var p = sprite({
@@ -118,9 +120,9 @@ onclick = e => {
     switch (s) {
         case 0: if (y > c.h / 2) s = 1;
             break;
-        case 1: toX = x; toY = y; ct = 12;
+        case 1: toX = x; toY = y; ct = 30; touch=true;done=false;
             break;
-        case 2: toX = x; toY = y; ct = 12;
+        case 2: toX = x; toY = y; ct = 30; touch=true;done=false;
             break;
         case 3: // react to clicks on screen 3
             break;
@@ -158,11 +160,9 @@ function street() {
     c.fillStyle = '#FFA62F';
     c.font = '30px Arial';
     c.fillText('Press enter to go inside', c.w / 2, c.h / 2);
-    if (ct > 0) {
-        touchMove(toX, toY);
-        ct--;
-    }
-    keyMove();
+
+    if(!touch){keyMove();}
+    if (touch&&!done) {touchMove(toX, toY);} 
     // p.update();
     //Note: To have better images don't use sprite sheets for movement just tween function
     // It requires less images, can use a sequence of frames/x/y movements instead
@@ -210,14 +210,12 @@ function inside() {
     //Note: To have better images don't use sprite sheets for movement just tween functions
     // It requires less images, so we can have better quality 
     p.render();
-
-    keyMove();
-    if (ct > 0) {
-        touchMove(toX, toY);
-        ct--;
+    if(!touch){keyMove();}
+    if (touch&&!done) {touchMove(toX, toY);} else{
+        p.y += p.s;
     }
     bump();
-    p.y += p.s;
+    
 
     tx(story, c.w / 2, c.h * .07);
 }
@@ -306,7 +304,6 @@ function sprite(options) {
                 if (that.seq.length > 0) {
                     frameIndex = that.seq[spot];
                     spot += 1;
-                    console.log(frameIndex);
                 }
             } else {
                 frameIndex = 0;
@@ -393,17 +390,25 @@ function touchMove(x, y) {
     if ((p.x > x + p.s || p.x < x - p.s)
         || (p.y > y + p.s || p.y < y - p.s)) {
         if (p.x != x) {
+            if (p.y != y) {
+                p.switch(4)
+                if (y > p.y) {
+                    p.y += p.s;
+                } else {
+                    p.y -= p.s;
+                }
+            }
             if (x > p.x) {
+                p.switch(1);
                 p.x += p.s;
             } else {
+                p.switch(0);
                 p.x -= p.s;
             }
-        } if (p.y != y) {
-            if (y > p.y) {
-                p.y += p.s;
-            } else {
-                p.y -= p.s * 5;
-            }
         }
-    }
+    }else{
+    done=true;
+    touch=false;
+    console.log("done touch");
+}
 }

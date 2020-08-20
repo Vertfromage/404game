@@ -18,3 +18,6 @@ that way all the sprites can be in one or two sprite sheets.
 Also we should have a basic tween function inside sprite to change
 stuff like x,y, direction Ex: idle (move up/down left/right in loop), goTo(move toward player),
 run (move away from player), should call tween from update? 
+
+Possible ways to make him shoot on mobile: swipe in the direction you want to shoot (have to check for swipe)
+Shoot button, tap on robot (next tap is direction)

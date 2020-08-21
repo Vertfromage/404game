@@ -26,3 +26,7 @@ Might use https://opengameart.org/content/pixel-character-0
 https://opengameart.org/content/pixel-art-adventurer-sprites
 
 Trophies: https://medium.com/js13kgames/os13k-an-unofficial-trophy-and-music-system-for-js13k-d799bf0ba126
+
+cool idea: skill make warp hole to suck people into space, makes warp hole randomly appear,
+ if you move characters to it they get sucked in. Should appear at bottom of building to use 
+ the fact that characters fall. 

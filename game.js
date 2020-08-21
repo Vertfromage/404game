@@ -7,6 +7,8 @@ c = a.getContext`2d`, k = [u = r = d = l = s = 0]
 c.width = document.documentElement.clientWidth;
 c.height = document.documentElement.clientHeight;
 
+
+
 // update u,l,d,r globals when an arrow key/wasd/zqsd is pressed or released
 // update k[keyCode] if any other key is pressed/released
 onkeydown = onkeyup = e => k[e.which] = self['lld*rlurdu'[e.which % 32 % 17]] = e.type[5]
@@ -27,7 +29,7 @@ function makeRect(x, y, width, height, speed, color) {
     };
 }
 // Keep track of gameOver for restart
-var gameOver = false;
+var gameOver;
 var levelCols = 32;// level width, in tiles
 var levelRows = 16;// level height, in tiles
 var pCol = 1; // player starting column
@@ -35,8 +37,10 @@ var pRow = 7; // player starting row
 var ct2 = 0;
 var pS = 4;
 var pL = c.width / levelCols;
-var touch = false;
-var done = true;
+var touch;
+var done;
+
+
 
 // p for player
 pImg = new Image();
@@ -67,13 +71,16 @@ for (i = 0; i < numnpcs; i += 1) {
 }
 var room = 0;
 // Adventure text
-var story = 'Press enter to go inside';
-var choose = "";
-var choices = [["1", "2", "3", "4", "5"], ["test", "test2", 3, 4, 5]];
+var story;
+var choose;
+var speak = ["This is a ", "You're an ", "You have a ", "You're here to ", ""];
+var choices = [["Peaceful Town", "Alien", "Warp Tunnel", "Destroy all life!", "I have no idea!"], ["test", "test2", 3, 4, 5]];
+var data;
 
 //endgame
-var game = 2;
-var mob = [false, false, false, false, false];
+var game;
+var mob;
+var health;
 
 var level = [      // the 32x16 level - 1=wall, 0=empty space
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -84,12 +91,12 @@ var level = [      // the 32x16 level - 1=wall, 0=empty space
     [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 2, 1],
-    [1, 1, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 1, 1, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [4, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+    [4, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
+    [4, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
@@ -112,8 +119,11 @@ setInterval(e => {
             break;
         case 2: inside();
             break;
-        case 3: mob = [false, false, false, false, false]; s=1;// ex: draw game over screen
+        case 3: s = 1;// back to street;
             break;
+        case 4: endScreen();if (k[13]) {
+            s=0;
+        }
     }
 }, 16)
 
@@ -124,7 +134,7 @@ setInterval(e => {
 onclick = e => {
     x = e.pageX; y = e.pageY;
     switch (s) {
-        case 0: if (y > c.h / 2) s = 1;
+        case 0: s = 1;
             break;
         case 1: toX = x; toY = y; ct = 600; touch = true; done = false;
             break;
@@ -153,21 +163,33 @@ function tx(t, w, h, f, s) {
 function title() {
     c.w = upC(0);
     c.h = upC(1);
-    tx('Robot Mission 404', c.w / 2, c.h / 4, 6, '#FFA62F');
+    data = ["404", "404", "404", "404"];
+    gameOver, touch = false;
+    done = true;
+    story = 'Press enter to go inside!';
+    choose = "";
+    game = 1;
+    mob = [false, false, false, false, false];
+    health = 100;
+    tx(story, c.w / 2, c.h / 4, 6, '#FFA62F');
     tx('Click to go to street', c.w / 2, c.h / 2, 3, '#000000');
+}
+
+function endScreen() {
+    tx(story + 'Self-destruct!', c.w / 2, c.h / 4, 6, '#FFA62F');
+    tx("Press enter to restart.", c.w / 2, c.h / 2, 3, '#000000');
+    if (k[88]) { s = 0 };
 }
 
 function street() {
     c.w = upC(0);
     c.h = upC(1);
+    mob = [false, false, false, false, false];
     drawSt();
     tx('Robot Mission 404', c.w / 2, c.h / 6, 5, '#000000');
     tx(story, c.w / 2, c.h / 2, 2.5, '#FFA62F');
     if (!touch) { keyMove(); }
     if (touch && !done) { touchMove(toX, toY); }
-    // p.update();
-    //Note: To have better images don't use sprite sheets for movement just tween function
-    // It requires less images, can use a sequence of frames/x/y movements instead
     p.render();
 }
 function drawSt() {
@@ -200,45 +222,67 @@ function goInside() {
 }
 // ToDo take in which building to draw different levels.
 function building() {
-    story = 'Mission: Enter 404 as 404 use 404 to 404.';
+    story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
     p.y = pRow * c.w / 16;
-    p.x = pCol *= c.w / 16;
+    p.x = pCol * c.w / 16;
     s = 2;
+}
+function complete() {
+    for (i in data) {
+        if (data[i] == 404) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function inside() {
     c.w = upC(0);
     c.h = upC(1);
-
-    //ToDo
     drawR();
-    //player
-    // p.w = c.w / levelCols;
-
     //npc
     let t = false;
     for (i = 0; i < npcs.length; i += 1) {
         npcs[i].update();
         npcs[i].render();
-        if(game==2){
-        if (p.isClose(npcs[i].x, npcs[i].y)) {
+
+        if (p.isClose(npcs[i].x, npcs[i].y, 1)) {
             // check for game state... adventure vs endgame.
             if (game == 1) {
-                story = choices[room][i];
+                story = speak[i] + choices[room][i] + "!";
                 choose = "Incoporate into memory file? Y or N";
                 t = true;
-            } else {
-                npcs[i].seq = [1, 0, 3, 4, 3, 1];
-                mob[i] = true;
+                if (k[89] && i != 4) {
+                    data[i] = choices[room][i];
+                } else if (k[78]) {
+                    data[i] = "404";
+                } else if (i == 4 && k[78]) {
+                    data[room] = "404";
+                }
+            } if (game == 2) {
+                {
+                    npcs[i].seq = [1, 0, 3, 4, 3, 1];
+                    mob[i] = true;
+                }
+            }
+            if (!mob[i]) { npcs[i].seq = [0, 0, 1, 1, 2, 2, 1, 1] };
+        }
+    }
+    if (!t) {
+        story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
+        choose = "";
+        if (complete() && game == 1) {
+            choose = "Memory restored. Start mission? Y ? N"
+            if (k[89]) {
+                game = 2;
+
             }
         }
-        if(!mob[i]){npcs[i].seq =[0, 0, 1, 1, 2, 2, 1, 1]};
-    }}
-    if (!t) {
-        // replace 404 with variables that hold current assignment
-        story = 'Mission: Enter 404 as 404 use 404 to 404.';
-        choose = "";
+        if (game == 2) {
+            choose = "Health: " + Math.floor(health);
+        }
     }
+
     p.render();
     if (l || r || u || d) {
         touch = false;
@@ -249,9 +293,13 @@ function inside() {
     }
     bump(p);
 
-    tx(story, c.w / 2, c.h * .07, 3, '#FFFFFF');
+    tx(story, c.w / 2, c.h * .06, 2.6, '#FFFFFF');
     tx(choose, c.w / 2, c.h * .11, 2, '#000000');
-    if(k[88]){s=3};
+    let tile = c.w / levelCols
+    if (p.y > tile * 12 && p.x < tile * 1 + tile / 4) {
+        s = 3;
+    }
+    if (health < 0) { story = "Mission Incomplete, "; s = 4 };
 }
 function drawR() {
     var tileSize = c.w / levelCols;
@@ -264,18 +312,26 @@ function drawR() {
 
     for (i = 0; i < levelRows; i++) {
         for (j = 0; j < levelCols; j++) {
-            if (level[i][j] == 1) {
-                c.fillStyle = "#ff0000";
+            let lv = level[i][j];
+            if (lv != 0 && lv != 2) {
+                switch (lv) {
+                    case 1: c.fillStyle = "#ff0000";
+                        break;
+                    case 4: c.fillStyle = "#000000";
+                        break;
+                }
+
                 c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
             } if (level[i][j] == 2 && nI < numnpcs) {
                 if (game == 2 && mob[nI]) {
-                    let n=p.x+tileSize*2
-                    if(n>c.w*0.1&&n<c.w*.9&&!(npcs[nI].y>p.y+tileSize*5)){
-                        npcs[nI].x = p.x-tileSize-nI*5;
+                    let n = p.x + tileSize * 2;
+                    if (npcs[nI].isClose(p.x, p.y, 3) && n > c.w * 0.1 && n < c.w * .9 && !(npcs[nI].y > p.y + tileSize * 5)) {
+                        npcs[nI].x = p.x - nI * 5 - tileSize * 2;
+                        health -= .02;
                     }
-                    if(npcs[nI].y+p.s<c.h*.9){
+                    if (npcs[nI].y + p.s < c.h * .9) {
                         npcs[nI].y += p.s;
-                    }           
+                    }
                     bump(npcs[nI]);
                 } else {
                     npcs[nI].x = j * tileSize; npcs[nI].y = i * tileSize;
@@ -286,14 +342,6 @@ function drawR() {
     }
 
 }
-function chase(npc) {
-    npc.x = p.x;
-    npc.y = p.y;
-}
-//Todo
-// function run(){
-
-// }
 
 function bump(s) {
     // check for horizontal collisions
@@ -387,14 +435,14 @@ function sprite(options) {
     that.getFrameWidth = function () {
         return that.w / numberOfFrames;
     };
-    that.isClose = function (x, y) {
-        var dx = (that.x + that.getFrameWidth() / 2 * that.scaleRatio) - x,
-            dy = (that.y + that.getFrameWidth() / 2 * that.scaleRatio) - y;
+    that.isClose = function (x, y, t) {
+        var dx = (that.x + that.getFrameWidth() / 2 * that.scaleRatio) - (x + that.getFrameWidth() / 2),
+            dy = (that.y + that.getFrameWidth() / 2 * that.scaleRatio) - (y + that.getFrameWidth() / 2);
 
         var dist = Math.sqrt(dx * dx + dy * dy);
 
 
-        if (dist < that.getFrameWidth() * that.scaleRatio) {
+        if (dist < that.getFrameWidth() * that.scaleRatio * t) {
             return true;
         } else {
             return false;

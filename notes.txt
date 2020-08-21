@@ -24,3 +24,5 @@ Shoot button, tap on robot (next tap is direction)
 
 Might use https://opengameart.org/content/pixel-character-0
 https://opengameart.org/content/pixel-art-adventurer-sprites
+
+Trophies: https://medium.com/js13kgames/os13k-an-unofficial-trophy-and-music-system-for-js13k-d799bf0ba126

@@ -1,12 +1,11 @@
 NOTES:
+<!-- Resources used -->
+<!-- https://gist.github.com/xem/a7ff7215375520d89b73beeabd7b16bd -->
+<!-- https://www.emanueleferonato.com/2014/01/17/creation-of-an-html5-tile-based-platform-game-with-no-engines-behind-pure-code/ -->
 
 Accidentally created rocket boots... character will keep going up if you hold the up button or click repeatedly above character. To disable rocket boots would be more complicated than keeping them, so seems like a good idea to keep them.
 
 Accidentally created a situation where if you stand on a single block or on the edge of a platform you'll slip off, also worth keeping. 
-
-Text should be at top, incase it gets cut off on full screen.
-
-Or text could be at the left side if we made the rooms smaller width wise.
 
 Need better touch controls, make function same as key.
 
@@ -24,9 +23,19 @@ Shoot button, tap on robot (next tap is direction)
 
 Might use https://opengameart.org/content/pixel-character-0
 https://opengameart.org/content/pixel-art-adventurer-sprites
+https://opengameart.org/content/building-animation-from-c42
 
 Trophies: https://medium.com/js13kgames/os13k-an-unofficial-trophy-and-music-system-for-js13k-d799bf0ba126
 
 cool idea: skill make warp hole to suck people into space, makes warp hole randomly appear,
  if you move characters to it they get sucked in. Should appear at bottom of building to use 
- the fact that characters fall. 
+ the fact that characters fall.  Or touch to give location?
+
+ ??Get rid of touch move to allow for clicking to send directional fire?
+
+ Go back through and adjust all sprites so that you can refresh scale; single function?
+
+Ways to make things smaller:
+ - Remember to remove level builder.
+ - remove touch controls 
+ - make own weapon pngs 8x8

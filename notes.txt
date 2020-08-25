@@ -39,3 +39,6 @@ Ways to make things smaller:
  - Remember to remove level builder.
  - remove touch controls 
  - make own weapon pngs 8x8
+
+ Bug - bumbing into 2 in map where npc usually is ... 
+ need way to ignore 2 in bump when game==2;

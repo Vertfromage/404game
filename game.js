@@ -3,8 +3,8 @@
 // initialize keys states (u,r,d,l for directions, k for all the keyboard)
 c = a.getContext`2d`, k = [u = r = d = l = s = 0]
 // (initialize your global variables here)
-c.width = document.documentElement.clientWidth;
-c.height = document.documentElement.clientHeight;
+c.w = innerWidth;
+c.h = innerHeight;
 // update u,l,d,r globals when an arrow key/wasd/zqsd is pressed or released
 // update k[keyCode] if any other key is pressed/released
 onkeydown = onkeyup = e => k[e.which] = self['lld*rlurdu'[e.which % 32 % 17]] = e.type[5]
@@ -12,8 +12,8 @@ onkeydown = onkeyup = e => k[e.which] = self['lld*rlurdu'[e.which % 32 % 17]] = 
 // Keep track of gameOver for restart
 var levelCols = 32;// level width, in tiles
 var levelRows = 16;// level height, in tiles
-var pCol = 1; // player starting column
-var pRow = 7; // player starting row
+var pCol = 2; // player starting column
+var pRow = 12; // player starting row
 var ct2 = 0;
 var pS = 4;
 var pL = c.width / levelCols;
@@ -25,7 +25,7 @@ var tool;
 var tS;
 
 // p for player
-var p = makeSprite(c, 350, 70, "robot2.png", 5, 40, c.width / 4, c.height / 2, 1, pS);
+var p = makeSprite(c, 350, 70, "robot2.png", 5, 40, c.w / 4, c.h / 2, 1, pS);
 var toX, toY = 0,
     onOff = -1, numnpcs = 5,
     npcs = [],
@@ -192,13 +192,6 @@ onclick = e => {
         case 5: toX = x; toY = y; tapped(x, y, false); break;
     }
 }
-function upC(x) {
-    if (x == 0) {
-        return document.documentElement.clientWidth;
-    } if (x == 1) {
-        return document.documentElement.clientHeight;
-    }
-}
 
 function tx(t, w, h, f, s) {
     c.textAlign = 'center';
@@ -209,8 +202,8 @@ function tx(t, w, h, f, s) {
 //scenes
 // Title
 function title() {
-    c.w = upC(0);
-    c.h = upC(1);
+    c.w = a.width;
+    c.h = a.height;
     data = ["404", "404", "404", "404"];
     touch = false;
     done = true;
@@ -220,21 +213,21 @@ function title() {
     mob = [false, false, false, false, false];
     health = 100;
     c.fillStyle = '#241007';
-    c.fillRect(0, 0, c.width, c.height);
+    c.fillRect(0, 0, c.w, c.h);
     tx(story, c.w / 2, c.h * .45, 6, '#dc21ff');
     tx('Click to go to street', c.w / 2, c.h * .6, 3, "#f5e2b4");
 }
 
 function endScreen() {
-    tx(story + 'Self-destruct!', c.w / 2, c.h / 4, 6, '#dc21ff');
+    tx(story + 'Self-destruct!', a.width / 2, a.height / 4, 6, '#dc21ff');
     // click to restart?
-    tx("Press enter to restart.", c.w / 2, c.h / 2, 3, '#000000');
+    tx("Press enter to restart.", a.width / 2, a.height / 2, 3, '#000000');
     if (k[88]) { s = 0 };
 }
 
 function street() {
-    c.w = upC(0);
-    c.h = upC(1);
+    c.w = a.width;
+    c.h = a.height;
     mob = [false, false, false, false, false];
     c.fillStyle = "#f5e2b4";
     c.fillRect(0, 0, c.w, c.h);
@@ -273,8 +266,8 @@ function street() {
 
 // ToDo take in which building to draw different levels.
 function building() {
-    p.y = pRow * c.w / 16;
-    p.x = pCol * c.w / 16;
+    p.x = pCol * a.width / 32;
+    p.y = pRow * a.height / 16;
     s = 2;
 }
 function complete() {
@@ -287,12 +280,12 @@ function complete() {
 }
 
 function inside() {
-    c.w = upC(0);
-    c.h = upC(1);
+    c.w = a.width;
+    c.h = a.height;
     drawR();
     //npc
     let t = false;
-    for (i = 0; i < npcs.length; i += 1) {
+    for (i = 0; i < npcs.length; i ++) {
         npcs[i].update();
         npcs[i].render();
 
@@ -311,12 +304,11 @@ function inside() {
                 }
             } if (game == 2) {
                 {
-                    npcs[i].seq = [1, 0, 3, 4, 3, 1];
+                    npcs[i].newSeq([1, 0, 3, 4, 3, 1]);
                     mob[i] = true;
                     // if using tool, result... pop from array after timer counts down/animation.
                 }
             }
-            if (!mob[i]) { npcs[i].seq = [0, 0, 1, 1, 2, 2, 1, 1] };
         }
     }
     if (!t) {
@@ -326,7 +318,7 @@ function inside() {
             choose = "Memory restored. Start mission? Y ? N"
             if (k[89]) {
                 // assign tool,location, goal, make tool sprite,
-                makeTool(); 
+                // makeTool(); 
                 game = 2;
             }
         }
@@ -336,14 +328,15 @@ function inside() {
     }
     // if game == 2 and key pressed for tool play tool animation. 
     if(game==2){
-        if(tool==1||tool==2){
-            tS.update();
-            tS.render();
-            // if(tool==2){
-            //     tS.x+=p.s;
-            // }
-        }
+        // if(tool==1||tool==2){
+        //     tS.update();
+        //     tS.render();
+        //     // if(tool==2){
+        //     //     tS.x+=p.s;
+        //     // }
+        // }
         if(k[13]){
+            console.log("c.w "+c.w+"c.h "+c.h);
             console.log(npcs);
         }
     }
@@ -358,9 +351,9 @@ function inside() {
     }
     bump(p);
 
-    tx(story, c.w / 2, c.h * .06, 2, "#f5e2b4");
-    tx(choose, c.w / 2, c.h * .11, 1.8, '#000000');
-    let tile = c.w / levelCols
+    tx(story, a.width/ 2, c.h * .06, 2, "#f5e2b4");
+    tx(choose, a.width / 2, c.h * .11, 1.8, '#000000');
+    let tile = a.width / levelCols
     if (p.y > tile * 12 && p.x < tile * 1 + tile / 4) {
         s = 3;
     }
@@ -369,8 +362,8 @@ function inside() {
 }
 function drawR() {
     c.fillStyle = "#f5e2b4";
-    c.fillRect(0, 0, c.width, c.height);
-    var tileSize = c.w / levelCols;
+    c.fillRect(0, 0, a.width, a.height);
+    var tileSize = a.width / levelCols;
     // converting X player position from tiles to pixels
     c.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
     c.height = tileSize * levelRows; // canvas height. Same as before
@@ -379,27 +372,32 @@ function drawR() {
 
     for (i = 0; i < levelRows; i++) {
         for (j = 0; j < levelCols; j++) {
-            let spot = level[R][i][j];
-            if (spot != 0 && spot != 2) {
-                switch (spot) {
+            let box = level[R][i][j];
+            if (box != 0 && box != 2) {
+                switch (box) {
                     case 1: c.fillStyle = '#dc21ff';
                         break;
                     case 4: c.fillStyle = "#000000";
                         break;
                 }
-
                 c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
-            } if (spot == 2 && nI < numnpcs) {
-                if (game == 2 && mob[nI]&&npcs[nI].x<c.w-tileSize&&npcs[nI].x>tileSize&&npcs[nI].y<c.h-tileSize&&npcs[nI].y>tileSize) {
-                    let n = p.x + tileSize * 2;
-                    if (npcs[nI].isClose(p.x, p.y, 3) && n > c.w * 0.1 && n < c.w * .9 && !(npcs[nI].y > p.y + tileSize * 5)) {
-                        npcs[nI].x = p.x - nI * 5 - tileSize * 2;
+            } if (box == 2 && nI < numnpcs) {
+                c.fillRect(npcs[nI].x, npcs[nI].y, tileSize, tileSize);
+                if (game == 2 && mob[nI]) {
+                    let n = p.x - nI * 5 - tileSize * 2;
+                    // boolean to make sure move leaves you inside 
+                    let b = (n<c.width-tileSize&&n>tileSize);
+                    if (npcs[nI].isClose(p.x, p.y, 3) && !(npcs[nI].y > p.y + tileSize * 3)&& b) {
+                        npcs[nI].x = n;
                         health -= .02;
                     }
-                    if (npcs[nI].y + p.s < c.h * .9) {
+                    if (npcs[nI].y + p.s < c.height-tileSize) {
                         npcs[nI].y += p.s;
                     }
+                    
                     bump(npcs[nI]);
+                    
+                    
                 } else {
                     npcs[nI].x = j * tileSize; npcs[nI].y = i * tileSize;
                 }
@@ -439,8 +437,7 @@ function mapEditor() {
     if (u) { tapped(toX, toY, true) };
 }
 function tapped(x, y, t) {
-    var tileSize = c.w / levelCols;
-    var tileSize = c.w / levelCols;
+    var tileSize = a.width / levelCols;
     var baseCol = Math.floor(x / tileSize);
     var baseRow = Math.floor(y / tileSize);
     let cur = level[R][baseRow][baseCol];
@@ -458,22 +455,39 @@ function tapped(x, y, t) {
 
 function bump(s) {
     // check for horizontal collisions
-    var tileSize = c.w / levelCols;
+    var tileSize = a.width / levelCols;
     var baseCol = Math.floor(s.x / tileSize);
     var baseRow = Math.floor(s.y / tileSize);
     var colOverlap = s.x % tileSize;
     var rowOverlap = s.y % tileSize;
 
-    if ((level[R][baseRow][baseCol + 1] && !level[R][baseRow][baseCol]) || (level[R][baseRow + 1][baseCol + 1] && !level[R][baseRow + 1][baseCol] && rowOverlap)) {
+    if(baseRow>16){
+        // console.log("s.y "+s.y); Only with resize
+        return;
+    }
+    if(baseCol>32){
+        // console.log("s.x "+s.x );
+        return;
+    }
+
+    // To check for 2 during game==2 store possible searches is var loop to turn 2's to 0's
+    let ch = [level[R][baseRow][baseCol], level[R][baseRow][baseCol + 1], level[R][baseRow + 1][baseCol], level[R][baseRow + 1][baseCol + 1]];
+
+    // for (i of ch) {
+    //     if (ch[i] == 2) {
+    //         ch[i] = 0;
+    //     }
+    // }
+    if ((ch[1] && !ch[0]) || (ch[3] && !ch[2] && rowOverlap)) {
         s.x = (baseCol * tileSize);
     }
-    if ((!level[R][baseRow][baseCol + 1] && level[R][baseRow][baseCol]) || (!level[R][baseRow + 1][baseCol + 1] && level[R][baseRow + 1][baseCol] && rowOverlap)) {
+    if ((!ch[1] && ch[0]) || (!ch[3] && ch[2] && rowOverlap)) {
         s.x = ((baseCol + 1) * tileSize);
     }
-    if ((level[R][baseRow + 1][baseCol] && !level[R][baseRow][baseCol]) || (level[R][baseRow + 1][baseCol + 1] && !level[R][baseRow][baseCol + 1] && colOverlap)) {
+    if ((ch[2] && !ch[0]) || (ch[3] && !ch[1] && colOverlap)) {
         s.y = (baseRow * tileSize);
     }
-    if ((!level[R][baseRow + 1][baseCol] && level[R][baseRow][baseCol]) || (!level[R][baseRow + 1][baseCol + 1] && level[R][baseRow][baseCol + 1] && colOverlap)) {
+    if ((!ch[2] && ch[0]) || (!ch[3] && ch[1] && colOverlap)) {
         s.y = ((baseRow + 1) * tileSize);
     }
 }
@@ -503,6 +517,11 @@ function sprite(options) {
     // should change frame index according to sequence instead of looping spritesheet
     that.switch = function (i) {
         frameIndex = i;
+    };
+
+    that.newSeq = function(seq){
+        spot=0;
+        that.seq= seq;
     };
 
     that.update = function () {
@@ -565,7 +584,7 @@ function sprite(options) {
     return that;
 }
 function makeSprite(c, w, h, img, f, t, x, y, r, s) {
-    var i;
+    let i;
     i = new Image();
     sp = sprite({
         context: c,

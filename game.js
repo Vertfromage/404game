@@ -55,6 +55,7 @@ var data;
 var game;
 var mob;
 var health;
+var dead = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
 
 var level = [[      // L1
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -111,7 +112,7 @@ var level = [[      // L1
     [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    
+
 ],
 //L4
 [
@@ -252,6 +253,7 @@ function street() {
             if (testing) {
                 s = 5;
             } else {
+                ct2 = 0;
                 building();
             }
         }
@@ -266,6 +268,16 @@ function street() {
 
 // ToDo take in which building to draw different levels.
 function building() {
+    if (game == 2) {
+        for (let i = 0; i < 5; i++) {
+            if (!(dead[R][i])) {
+                npcs[i].newSeq([1, 0, 3, 4, 3, 1]);
+            }
+            else {
+                npcs[i].newSeq([5]);
+            }
+        }
+    }
     p.x = pCol * a.width / 32;
     p.y = pRow * a.height / 16;
     s = 2;
@@ -285,10 +297,7 @@ function inside() {
     drawR();
     //npc
     let t = false;
-    for (i = 0; i < npcs.length; i ++) {
-        npcs[i].update();
-        npcs[i].render();
-
+    for (i = 0; i < npcs.length; i++) {
         if (p.isClose(npcs[i].x, npcs[i].y, 1)) {
             // check for game state... adventure vs endgame.
             if (game == 1) {
@@ -302,14 +311,19 @@ function inside() {
                 } else if (i == 4 && k[78]) {
                     data[2] = "404";
                 }
-            } if (game == 2) {
+            } if (game == 2 && !mob[i] && dead[R][i] == 0) {
                 {
                     npcs[i].newSeq([1, 0, 3, 4, 3, 1]);
                     mob[i] = true;
-                    // if using tool, result... pop from array after timer counts down/animation.
                 }
             }
         }
+        if (game == 2 && npcs[i].isClose(tS.x, tS.y, 2) && dead[R][i] == 0) {
+            npcs[i].newSeq([5]);
+            dead[R][i] = 1;
+        }
+        npcs[i].update();
+        npcs[i].render();
     }
     if (!t) {
         story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
@@ -318,7 +332,7 @@ function inside() {
             choose = "Memory restored. Start mission? Y ? N"
             if (k[89]) {
                 // assign tool,location, goal, make tool sprite,
-                // makeTool(); 
+                makeTool();
                 game = 2;
             }
         }
@@ -327,19 +341,35 @@ function inside() {
         }
     }
     // if game == 2 and key pressed for tool play tool animation. 
-    if(game==2){
-        // if(tool==1||tool==2){
-        //     tS.update();
-        //     tS.render();
-        //     // if(tool==2){
-        //     //     tS.x+=p.s;
-        //     // }
-        // }
-        if(k[13]){
-            console.log("c.w "+c.w+"c.h "+c.h);
-            console.log(npcs);
+    if (game == 2) {
+        if (tool == 1) {
+            if (k[32]) {
+                tS.x = p.x;
+                tS.y = p.y;
+            }
+        } else if (tool == 2) {
+            if (k[32]) {
+                tS.x = p.x + a.width / levelCols / 2;
+                tS.y = p.y;
+                tS.alpha = 1;
+                let rA;
+                if (l) { tS.newSeq([0]); rA = -8; }
+                if (r) { tS.newSeq([1]); rA = 8; }
+                let timerId = setInterval(() => {
+                    tS.x += rA;
+                }, 250);
+                setTimeout(() => { clearInterval(timerId); tS.alpha = 0 }, 3000);
+
+            }
         }
+        tS.update();
+        tS.render();
     }
+    if (k[13]) {
+        console.log("c.w " + c.w + "c.h " + c.h);
+        console.log(npcs);
+    }
+
 
     p.render();
     if (l || r || u || d) {
@@ -351,7 +381,7 @@ function inside() {
     }
     bump(p);
 
-    tx(story, a.width/ 2, c.h * .06, 2, "#f5e2b4");
+    tx(story, a.width / 2, c.h * .06, 2, "#f5e2b4");
     tx(choose, a.width / 2, c.h * .11, 1.8, '#000000');
     let tile = a.width / levelCols
     if (p.y > tile * 12 && p.x < tile * 1 + tile / 4) {
@@ -381,23 +411,22 @@ function drawR() {
                         break;
                 }
                 c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
-            } if (box == 2 && nI < numnpcs) {
-                c.fillRect(npcs[nI].x, npcs[nI].y, tileSize, tileSize);
+            } if (box == 2 && nI < numnpcs && dead[R][nI] == 0) {
                 if (game == 2 && mob[nI]) {
                     let n = p.x - nI * 5 - tileSize * 2;
                     // boolean to make sure move leaves you inside 
-                    let b = (n<c.width-tileSize&&n>tileSize);
-                    if (npcs[nI].isClose(p.x, p.y, 3) && !(npcs[nI].y > p.y + tileSize * 3)&& b) {
+                    let b = (n < c.width - tileSize && n > tileSize);
+                    if (npcs[nI].isClose(p.x, p.y, 3) && !(npcs[nI].y > p.y + tileSize * 3) && b) {
                         npcs[nI].x = n;
                         health -= .02;
                     }
-                    if (npcs[nI].y + p.s < c.height-tileSize) {
+                    if (npcs[nI].y + p.s < c.height - tileSize) {
                         npcs[nI].y += p.s;
                     }
-                    
+
                     bump(npcs[nI]);
-                    
-                    
+
+
                 } else {
                     npcs[nI].x = j * tileSize; npcs[nI].y = i * tileSize;
                 }
@@ -408,17 +437,17 @@ function drawR() {
 
 }
 // Endgame
-function makeTool(){
-    switch(data[2]){
-        case "Warp Tunnel":;
-        case "Vacuum":tool=1; tS=makeSprite(c, 24, 4, "warp.png", 4, 5, p.x, p.y, 10, 0);
-        break;
-        case "Laser Gun":tool=2; tS=makeSprite(c, 90, 15, "fire.png", 6, 5, p.x, p.y, 6, 0);tS.seq=[0,1,2,3,4,4,4,4,5];
-        break;
-        case "Cool Jet Pack": tool=3;
-        break;
-        case "Self Destruct":tool=4;
-        break;
+function makeTool() {
+    switch (data[2]) {
+        case "Warp Tunnel": ;
+        case "Vacuum": tool = 1; tS = makeSprite(c, 24, 4, "warp.png", 4, 5, p.x, p.y, 10, 0);
+            break;
+        case "Laser Gun": tool = 2; tS = makeSprite(c, 40, 5, "shot.png", 2, 10, p.x, p.y, 2, 2); tS.newSeq([0]);
+            break;
+        case "Cool Jet Pack": tool = 3;
+            break;
+        case "Self Destruct": tool = 4;
+            break;
     }
     console.log(tool);
 }
@@ -432,7 +461,7 @@ function mapEditor() {
     }
     if (k[13]) {
         console.log(level[R]);
-        s=2;testing=false;
+        s = 2; testing = false;
     }
     if (u) { tapped(toX, toY, true) };
 }
@@ -461,11 +490,11 @@ function bump(s) {
     var colOverlap = s.x % tileSize;
     var rowOverlap = s.y % tileSize;
 
-    if(baseRow>16){
+    if (baseRow > 16) {
         // console.log("s.y "+s.y); Only with resize
         return;
     }
-    if(baseCol>32){
+    if (baseCol > 32) {
         // console.log("s.x "+s.x );
         return;
     }
@@ -519,9 +548,10 @@ function sprite(options) {
         frameIndex = i;
     };
 
-    that.newSeq = function(seq){
-        spot=0;
-        that.seq= seq;
+    that.newSeq = function (seq) {
+        spot = 0;
+        frameIndex = 0;
+        that.seq = seq;
     };
 
     that.update = function () {
@@ -540,7 +570,7 @@ function sprite(options) {
                     frameIndex = that.seq[spot];
                     spot += 1;
                 }
-            } else if(that.seq.length<1){
+            } else if (that.seq.length < 1) {
                 frameIndex = 0;
             }
             if (spot > that.seq.length - 1) {
@@ -604,7 +634,8 @@ function makeSprite(c, w, h, img, f, t, x, y, r, s) {
 
 function spawnnpc() {
     let i = npcs.length;
-    npcs[i] = makeSprite(c, 256, 32, "man.png", 8, 5, 0, 0, 1.5, 2);
+    npcs[i] = makeSprite(c, 192, 32, "man.png", 6, 5, 0, 0, 1.5, 2);
+    npcs[i].dead = false;
 }
 function spawnb(img) {
     let i = bd.length;

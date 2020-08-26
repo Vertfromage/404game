@@ -32,10 +32,6 @@ var toX, toY = 0,
     bd = [];
 for (let i = 0; i < numnpcs; i += 1) {
     spawnnpc();
-    npcs[i].seq = [0, 0, 1, 1, 2, 2, 1, 1];
-}
-var totalNPC = 5;
-for (let i = 0; i < 5; i += 1) {
     if (i > 2) {
         spawnb("buildFlip.png");
     } else {
@@ -55,11 +51,11 @@ var data;
 var game;
 var mob;
 var health;
-var dead = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
+var dead;
 
 var level = [[      // L1
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
+    [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1],
     [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -77,8 +73,8 @@ var level = [[      // L1
 ],
 //L2
 [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
+    [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 0, 0, 1, 2, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 2, 0, 0, 0, 0, 1, 0, 1],
@@ -96,8 +92,8 @@ var level = [[      // L1
 ],
 //L3
 [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
+    [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 1],
@@ -116,8 +112,8 @@ var level = [[      // L1
 ],
 //L4
 [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
+    [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 0, 2, 1, 0, 0, 1, 0, 1, 2, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
     [1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 2, 0, 0, 0, 0, 1, 1, 0, 1],
@@ -135,8 +131,8 @@ var level = [[      // L1
 ],
 //L5
 [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
+    [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1],
     [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -193,13 +189,6 @@ onclick = e => {
         case 5: toX = x; toY = y; tapped(x, y, false); break;
     }
 }
-
-function tx(t, w, h, f, s) {
-    c.textAlign = 'center';
-    c.fillStyle = s;
-    c.font = f + 'vw Arial';
-    c.fillText(t, w, h);
-}
 //scenes
 // Title
 function title() {
@@ -212,12 +201,17 @@ function title() {
     choose = "";
     game = 1;
     mob = [false, false, false, false, false];
+    dead = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
     health = 100;
+    for (let i = 0; i < numnpcs; i += 1) {
+        npcs[i].newSeq([0, 0, 1, 1, 2, 2, 1, 1]);
+    }
     c.fillStyle = '#241007';
     c.fillRect(0, 0, c.w, c.h);
     tx(story, c.w / 2, c.h * .45, 6, '#dc21ff');
     tx('Click to go to street', c.w / 2, c.h * .6, 3, "#f5e2b4");
 }
+
 
 function endScreen() {
     tx(story + 'Self-destruct!', a.width / 2, a.height / 4, 6, '#dc21ff');
@@ -318,7 +312,7 @@ function inside() {
                 }
             }
         }
-        if (game == 2 && npcs[i].isClose(tS.x, tS.y, 2) && dead[R][i] == 0) {
+        if (game == 2 && npcs[i].isClose(tS.x, tS.y, 1.5) && dead[R][i] == 0) {
             npcs[i].newSeq([5]);
             dead[R][i] = 1;
         }
@@ -382,7 +376,7 @@ function inside() {
     bump(p);
 
     tx(story, a.width / 2, c.h * .06, 2, "#f5e2b4");
-    tx(choose, a.width / 2, c.h * .11, 1.8, '#000000');
+    tx(choose, a.width / 2, c.h * .11, 1.5, '#dc21ff');
     let tile = a.width / levelCols
     if (p.y > tile * 12 && p.x < tile * 1 + tile / 4) {
         s = 3;
@@ -403,15 +397,15 @@ function drawR() {
     for (i = 0; i < levelRows; i++) {
         for (j = 0; j < levelCols; j++) {
             let box = level[R][i][j];
-            if (box != 0 && box != 2) {
-                switch (box) {
-                    case 1: c.fillStyle = '#dc21ff';
-                        break;
-                    case 4: c.fillStyle = "#000000";
-                        break;
-                }
-                c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
-            } if (box == 2 && nI < numnpcs && dead[R][nI] == 0) {
+
+            switch (box) {
+                case 1: drawWall(c, j * tileSize, i * tileSize, tileSize, "#f5e2b4", '#dc21ff');
+                    break;
+                case 4:
+                case 5: c.fillStyle = "#000000"; c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
+                    break;
+            }
+            if (box == 2 && nI < numnpcs && dead[R][nI] == 0) {
                 if (game == 2 && mob[nI]) {
                     let n = p.x - nI * 5 - tileSize * 2;
                     // boolean to make sure move leaves you inside 
@@ -435,6 +429,40 @@ function drawR() {
         }
     }
 
+}
+// Writen by workshopcraft https://github.com/dazsim/js13k2020
+function drawWall(c, x, y, s, primary, secondary) {
+    c.fillStyle = secondary
+    c.fillRect(x, y, s, s)
+    c.strokeStyle = primary
+    c.lineWidth = 4
+
+    c.beginPath()
+    c.moveTo(x, y + s / 2)
+    c.lineTo(x + s, y + s / 2)
+    c.stroke()
+
+    c.lineWidth = 2
+    c.beginPath()
+    c.moveTo(x, y)
+    c.lineTo(x + s, y)
+    c.stroke()
+
+    c.beginPath()
+    c.moveTo(x, y + s - 2)
+    c.lineTo(x + s, y + s - 2)
+    c.stroke()
+
+    c.lineWidth = 4
+    c.beginPath()
+    c.moveTo(x + s - 2, y + s / 2)
+    c.lineTo(x + s - 2, y + s)
+    c.stroke()
+
+    c.beginPath()
+    c.moveTo(x + s / 2 - 2, y)
+    c.lineTo(x + s / 2 - 2, y + s / 2)
+    c.stroke()
 }
 // Endgame
 function makeTool() {
@@ -498,15 +526,9 @@ function bump(s) {
         // console.log("s.x "+s.x );
         return;
     }
-
     // To check for 2 during game==2 store possible searches is var loop to turn 2's to 0's
     let ch = [level[R][baseRow][baseCol], level[R][baseRow][baseCol + 1], level[R][baseRow + 1][baseCol], level[R][baseRow + 1][baseCol + 1]];
 
-    // for (i of ch) {
-    //     if (ch[i] == 2) {
-    //         ch[i] = 0;
-    //     }
-    // }
     if ((ch[1] && !ch[0]) || (ch[3] && !ch[2] && rowOverlap)) {
         s.x = (baseCol * tileSize);
     }
@@ -539,14 +561,6 @@ function sprite(options) {
     that.scaleRatio = 1;
     that.s = options.s;
     that.seq = [];
-
-    // ToDo: that.sequence 
-    // choose frames/movements (should be able to update depending on sequence)
-    // replaces update with a tween like sprite animation
-    // should change frame index according to sequence instead of looping spritesheet
-    that.switch = function (i) {
-        frameIndex = i;
-    };
 
     that.newSeq = function (seq) {
         spot = 0;
@@ -603,7 +617,6 @@ function sprite(options) {
 
         var dist = Math.sqrt(dx * dx + dy * dy);
 
-
         if (dist < that.getFrameWidth() * that.scaleRatio * t) {
             return true;
         } else {
@@ -614,8 +627,7 @@ function sprite(options) {
     return that;
 }
 function makeSprite(c, w, h, img, f, t, x, y, r, s) {
-    let i;
-    i = new Image();
+    let i = new Image();
     sp = sprite({
         context: c,
         width: w,
@@ -638,10 +650,15 @@ function spawnnpc() {
     npcs[i].dead = false;
 }
 function spawnb(img) {
-    let i = bd.length;
-    bd[i] = makeSprite(c, 100, 8, img, 10, 20, 0, 0, 0, 0);
+    bd[bd.length] = makeSprite(c, 100, 8, img, 10, 20, 0, 0, 0, 0);
 }
 
+function tx(t, w, h, f, s) {
+    c.textAlign = 'center';
+    c.fillStyle = s;
+    c.font = f + 'vw Arial';
+    c.fillText(t, w, h);
+}
 
 function keyMove() {
     if (u) { p.y -= p.s * 5; p.switch(4); };

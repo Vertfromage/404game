@@ -181,7 +181,6 @@ setInterval(e => {
 onclick = e => {
     x = e.pageX; y = e.pageY;
     switch (s) {
-        case 0: const node = zzfxP(...buffer); node.loop = true; 
         case 0: const node = zzfxP(...buffer); node.loop = true;
             s = 1;
             break;

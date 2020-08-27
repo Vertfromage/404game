@@ -52,7 +52,7 @@ var health;
 var dead;
 
 //sound Not sure if it's worth the space it takes. Mutated Depp sample
-const songData=[[[.9,0,143,,,.35,3]],[[[0,-1,1,8,6,4,1.5,2.75,4,,5,,6,4,,5,,6,-1,0,0,0],[0,1,1,8,6,4,1.5,2.75,4,,5,,6,4,,5,,6,-1,0,0,0]],[[0,-1,20,,21,18,,18,20,,21,18,,18,,18,,18,20,,21,,20,,21,18,,12,0,0,0,-1,3.5,12,12,5,,10,,10,5,,8,,0,0,0,3.5,12,,,-1],[0,1,20,,21,18,,18,20,,21,18,,18,,18,,18,20,,21,,20,,21,18,,12,0,0,0,-1,3.5,12,12,5,,10,,10,5,,8,,0,0,0,3.5,12,,,-1]]],[1,1,0,0,1,0],60,{title:"baBoot",author:"Vertfromage"}];
+const songData = [[[.9, 0, 143, , , .35, 3]], [[[0, -1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0], [0, 1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0]], [[0, -1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1], [0, 1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1]]], [1, 1, 0, 0, 1, 0], 60, { title: "baBoot", author: "Vertfromage" }];
 const buffer = zzfxM(...songData);    // Generate the sample data
 
 
@@ -182,7 +182,8 @@ onclick = e => {
     x = e.pageX; y = e.pageY;
     switch (s) {
         case 0: const node = zzfxP(...buffer); node.loop = true; 
-         s = 1;
+        case 0: const node = zzfxP(...buffer); node.loop = true;
+            s = 1;
             break;
         case 1: toX = x; toY = y; ct = 600;
             break;
@@ -265,6 +266,7 @@ function street() {
 
 function building() {
     if (game == 2) {
+        tS.x = 0; tS.y = 0;
         for (let i = 0; i < 5; i++) {
             if (!(dead[R][i])) {
                 npcs[i].newSeq([0, 0, 1, 1, 2, 2, 1, 1]);
@@ -347,16 +349,16 @@ function inside() {
             if (k[32]) {
                 tS.x = p.x + a.width / levelCols / 2;
                 tS.y = p.y;
-                tS.alpha = 1;
                 let rA;
-                if (l) { tS.newSeq([0]); rA = -8; }
-                if (r) { tS.newSeq([1]); rA = 8; }
-                zzfxP(...lazer);
+                if (l) { tS.newSeq([0]); rA = -8; 
+                } if(r){ rA = 8;tS.newSeq([1]); }
                 let timerId = setInterval(() => {
                     tS.x += rA;
-                }, 250);
-                setTimeout(() => { clearInterval(timerId); tS.alpha = 0 }, 3000);
-
+                }, 50);
+                setTimeout(() => {
+                    clearInterval(timerId); tS.x = 0;
+                    tS.y = 0;
+                }, 300);
             }
         }
         tS.update();
@@ -369,8 +371,8 @@ function inside() {
 
 
     p.render();
-    
-    keyMove(); 
+
+    keyMove();
     p.y += p.s;
 
     bump(p);
@@ -468,9 +470,9 @@ function drawWall(c, x, y, s, primary, secondary) {
 function makeTool() {
     switch (data[2]) {
         case "Warp Tunnel": ;
-        case "Vacuum": tool = 1; tS = makeSprite(c, 24, 4, "warp.png", 4, 5, p.x, p.y, 10, 0);
+        case "Vacuum": tool = 1; tS = makeSprite(c, 24, 4, "warp.png", 4, 5, 0, 0, 10, 0);
             break;
-        case "Laser Gun": tool = 2; tS = makeSprite(c, 40, 5, "shot.png", 2, 10, p.x, p.y, 2, 2); tS.newSeq([0]);
+        case "Laser Gun": tool = 2; tS = makeSprite(c, 40, 5, "shot.png", 2, 10, 0, 0, 2, 2); tS.newSeq([0]);
             break;
         case "Cool Jet Pack": tool = 3;
             break;

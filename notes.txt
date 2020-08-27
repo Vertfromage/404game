@@ -3,6 +3,9 @@ NOTES:
 <!-- https://gist.github.com/xem/a7ff7215375520d89b73beeabd7b16bd -->
 <!-- https://www.emanueleferonato.com/2014/01/17/creation-of-an-html5-tile-based-platform-game-with-no-engines-behind-pure-code/ -->
      function drawWall by dazsim https://github.com/dazsim/js13k2020
+Used https://github.com/keithclark/ZzFXM, https://keithclark.github.io/ZzFXM/ for music/sounds
+
+
 Accidentally created rocket boots... character will keep going up if you hold the up button or click repeatedly above character. To disable rocket boots would be more complicated than keeping them, so seems like a good idea to keep them.
 
 Accidentally created a situation where if you stand on a single block or on the edge of a platform you'll slip off, also worth keeping. 

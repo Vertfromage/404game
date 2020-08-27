@@ -17,15 +17,13 @@ var pRow = 12; // player starting row
 var ct2 = 0;
 var pS = 4;
 var pL = c.width / levelCols;
-var touch;
-var done;
 var gameOver = false;
 var testing = false;
 var tool;
 var tS;
 
 // p for player
-var p = makeSprite(c, 350, 70, "robot2.png", 5, 40, c.w / 4, c.h / 2, 1, pS);
+var p = makeSprite(c, 350, 70, "robot.png", 5, 40, c.w / 4, c.h / 2, 1, pS);
 var toX, toY = 0,
     onOff = -1, numnpcs = 5,
     npcs = [],
@@ -52,6 +50,11 @@ var game;
 var mob;
 var health;
 var dead;
+
+//sound Not sure if it's worth the space it takes. Mutated Depp sample
+const songData=[[[.9,0,143,,,.35,3]],[[[0,-1,1,8,6,4,1.5,2.75,4,,5,,6,4,,5,,6,-1,0,0,0],[0,1,1,8,6,4,1.5,2.75,4,,5,,6,4,,5,,6,-1,0,0,0]],[[0,-1,20,,21,18,,18,20,,21,18,,18,,18,,18,20,,21,,20,,21,18,,12,0,0,0,-1,3.5,12,12,5,,10,,10,5,,8,,0,0,0,3.5,12,,,-1],[0,1,20,,21,18,,18,20,,21,18,,18,,18,,18,20,,21,,20,,21,18,,12,0,0,0,-1,3.5,12,12,5,,10,,10,5,,8,,0,0,0,3.5,12,,,-1]]],[1,1,0,0,1,0],60,{title:"baBoot",author:"Vertfromage"}];
+const buffer = zzfxM(...songData);    // Generate the sample data
+
 
 var level = [[      // L1
     [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
@@ -178,11 +181,12 @@ setInterval(e => {
 onclick = e => {
     x = e.pageX; y = e.pageY;
     switch (s) {
-        case 0: s = 1;
+        case 0: const node = zzfxP(...buffer); node.loop = true; 
+         s = 1;
             break;
-        case 1: toX = x; toY = y; ct = 600; touch = true; done = false;
+        case 1: toX = x; toY = y; ct = 600;
             break;
-        case 2: toX = x; toY = y; ct = 600; touch = true; done = false;
+        case 2: toX = x; toY = y; ct = 600;
             break;
         case 3: // react to clicks on screen 3
             break;
@@ -195,11 +199,11 @@ function title() {
     c.w = a.width;
     c.h = a.height;
     data = ["404", "404", "404", "404"];
-    touch = false;
     done = true;
     story = 'Robot Mission 404';
     choose = "";
     game = 1;
+    //ToDo switch mob to 0 or 1 and have for each room;
     mob = [false, false, false, false, false];
     dead = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
     health = 100;
@@ -210,12 +214,12 @@ function title() {
     c.fillRect(0, 0, c.w, c.h);
     tx(story, c.w / 2, c.h * .45, 6, '#dc21ff');
     tx('Click to go to street', c.w / 2, c.h * .6, 3, "#f5e2b4");
+    tx('Controls: arrows / awsd, space, y, n', c.w / 2, c.h * .8, 1.5, "#f5e2b4");
 }
 
 
 function endScreen() {
     tx(story + 'Self-destruct!', a.width / 2, a.height / 4, 6, '#dc21ff');
-    // click to restart?
     tx("Press enter to restart.", a.width / 2, a.height / 2, 3, '#000000');
     if (k[88]) { s = 0 };
 }
@@ -255,17 +259,15 @@ function street() {
     tx('Robot Mission 404', c.w / 2, c.h / 2, 5, '#dc21ff');
     story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
     tx(story, c.w / 2, c.h * .6, 2.5, "#f5e2b4");
-    if (!touch) { keyMove(); }
-    if (touch && !done) { touchMove(toX, toY); }
+    keyMove();
     p.render();
 }
 
-// ToDo take in which building to draw different levels.
 function building() {
     if (game == 2) {
         for (let i = 0; i < 5; i++) {
             if (!(dead[R][i])) {
-                npcs[i].newSeq([1, 0, 3, 4, 3, 1]);
+                npcs[i].newSeq([0, 0, 1, 1, 2, 2, 1, 1]);
             }
             else {
                 npcs[i].newSeq([5]);
@@ -307,7 +309,7 @@ function inside() {
                 }
             } if (game == 2 && !mob[i] && dead[R][i] == 0) {
                 {
-                    npcs[i].newSeq([1, 0, 3, 4, 3, 1]);
+                    npcs[i].newSeq([3, 4]);
                     mob[i] = true;
                 }
             }
@@ -349,6 +351,7 @@ function inside() {
                 let rA;
                 if (l) { tS.newSeq([0]); rA = -8; }
                 if (r) { tS.newSeq([1]); rA = 8; }
+                zzfxP(...lazer);
                 let timerId = setInterval(() => {
                     tS.x += rA;
                 }, 250);
@@ -366,13 +369,10 @@ function inside() {
 
 
     p.render();
-    if (l || r || u || d) {
-        touch = false;
-    }
-    if (!touch) { keyMove(); }
-    if (touch && !done) { touchMove(toX, toY); } else {
-        p.y += p.s;
-    }
+    
+    keyMove(); 
+    p.y += p.s;
+
     bump(p);
 
     tx(story, a.width / 2, c.h * .06, 2, "#f5e2b4");
@@ -511,7 +511,6 @@ function tapped(x, y, t) {
 }
 
 function bump(s) {
-    // check for horizontal collisions
     var tileSize = a.width / levelCols;
     var baseCol = Math.floor(s.x / tileSize);
     var baseRow = Math.floor(s.y / tileSize);
@@ -519,14 +518,12 @@ function bump(s) {
     var rowOverlap = s.y % tileSize;
 
     if (baseRow > 16) {
-        // console.log("s.y "+s.y); Only with resize
         return;
     }
     if (baseCol > 32) {
-        // console.log("s.x "+s.x );
         return;
     }
-    // To check for 2 during game==2 store possible searches is var loop to turn 2's to 0's
+
     let ch = [level[R][baseRow][baseCol], level[R][baseRow][baseCol + 1], level[R][baseRow + 1][baseCol], level[R][baseRow + 1][baseCol + 1]];
 
     if ((ch[1] && !ch[0]) || (ch[3] && !ch[2] && rowOverlap)) {
@@ -567,6 +564,10 @@ function sprite(options) {
         frameIndex = 0;
         that.seq = seq;
     };
+
+    that.switch = function (x) {
+        frameIndex = x;
+    }
 
     that.update = function () {
 
@@ -646,7 +647,7 @@ function makeSprite(c, w, h, img, f, t, x, y, r, s) {
 
 function spawnnpc() {
     let i = npcs.length;
-    npcs[i] = makeSprite(c, 192, 32, "man.png", 6, 5, 0, 0, 1.5, 2);
+    npcs[i] = makeSprite(c, 120, 16, "man2.png", 6, 8, 0, 0, 2.2, 2);
     npcs[i].dead = false;
 }
 function spawnb(img) {
@@ -674,29 +675,4 @@ function keyMove() {
     };
 }
 
-function touchMove(x, y) {
-    if ((p.x > x + p.s || p.x < x - p.s)
-        || (p.y > y + p.s || p.y < y - p.s)) {
-        if (p.x != x) {
-            if (p.y != y) {
-                p.switch(4)
-                if (y > p.y) {
-                    p.y += p.s;
-                } else {
-                    p.y -= p.s;
-                }
-            }
-            if (x > p.x) {
-                p.switch(1);
-                p.x += p.s;
-            } else {
-                p.switch(0);
-                p.x -= p.s;
-            }
-        }
-    } else {
-        done = true;
-        touch = false;
-    }
-}
-// ToDo update function for everything that has to be updated according to screen size!!!
+

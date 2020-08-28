@@ -42,7 +42,7 @@ var R = 0;
 var story;
 var choose;
 var speak = ["This is a ", "Ahh! You're an ", "You have a ", "You're here to ", ""];
-var choices = [["Peaceful Town", "Alien", "Warp Tunnel", "Destroy all life!", "Ahhh! What are you?!"], ["Mob's Hideout", "Robo Cop", "Laser Gun", "Fight the Mob!", "Can I pay you off?"], ["Government Facility", "Escaped Experiment", "Self Destruct", "Destroy the Evidence.", "I'm going to be in so much trouble!"], ["Delightful Bakery", "Bad Trip", "Cool Jet Pack", "Try the Brownies?", "Yikes!"], ["Enviromental Organization", "Volunteer", "Vacuum", "Clean Up Trash", "I can't believe my eyes!"]];
+var choices = [["Peaceful Town", "Alien", "Warp Tunnel", "Destroy all life!", "Ahhh! What are you?!"], ["Mob's Hideout", "Robo Cop", "Laser Gun", "Fight the Mob!", "Can I pay you off?"], ["Government Facility", "Escaped Experiment", "Self Destruct", "Destroy the Evidence.", "I'm going to be in so much trouble!"], ["Delightful Bakery", "Bad Trip", "Cool Jet Pack", "Try the Brownies?", "Yikes!"], ["Comic Convention", "Cosplayer", "Loot Bag", "Collect Prizes", "The costumes are amazing this year!"]];
 var data;
 
 //endgame
@@ -648,7 +648,7 @@ function makeSprite(c, w, h, img, f, t, x, y, r, s) {
 
 function spawnnpc() {
     let i = npcs.length;
-    npcs[i] = makeSprite(c, 120, 16, "man2.png", 6, 8, 0, 0, 2.2, 2);
+    npcs[i] = makeSprite(c, 168, 22, "man3.png", 6, 8, 0, 0, 1.5, 2);
     npcs[i].dead = false;
 }
 function spawnb(img) {

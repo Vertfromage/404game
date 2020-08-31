@@ -5,20 +5,7 @@ NOTES:
      function drawWall by dazsim https://github.com/dazsim/js13k2020
 Used https://github.com/keithclark/ZzFXM, https://keithclark.github.io/ZzFXM/ for music/sounds
 
-
-Accidentally created rocket boots... character will keep going up if you hold the up button or click repeatedly above character. To disable rocket boots would be more complicated than keeping them, so seems like a good idea to keep them.
-
-Accidentally created a situation where if you stand on a single block or on the edge of a platform you'll slip off, also worth keeping. 
-
-Need better touch controls, make function same as key.
-
-Layout: 3/4 screen for platformer, 1/4 screen for adventure text
-
-In sprite Update should be replaced with a version that loops through a sequence of frames, 
-that way all the sprites can be in one or two sprite sheets.
-
-Possible ways to make him shoot on mobile: swipe in the direction you want to shoot (have to check for swipe)
-Shoot button, tap on robot (next tap is direction)
+Description: A choose your own adventure game featuring an amnesiac robot.
 
 Might use https://opengameart.org/content/pixel-character-0
 https://opengameart.org/content/pixel-art-adventurer-sprites
@@ -26,16 +13,8 @@ https://opengameart.org/content/building-animation-from-c42
 
 Trophies: https://medium.com/js13kgames/os13k-an-unofficial-trophy-and-music-system-for-js13k-d799bf0ba126
 localStorage[‘OS13kTrophy,Icon,Game Name,Trophy Name’] = Message 
-*** When I put in a tropy it's going to be for finishing and it will be Self Destruct!  Or one for each possible tool?
+*** When I put in a trophy it's going to be for finishing and it will be Self Destruct!  Or one for each possible tool?
 
-
-cool idea: skill make warp hole to suck people into space, makes warp hole randomly appear,
- if you move characters to it they get sucked in. Should appear at bottom of building to use 
- the fact that characters fall.  Or touch to give location?
-
- ??Get rid of touch move to allow for clicking to send directional fire?
-
- Go back through and adjust all sprites so that you can refresh scale; single function?
 
 Ways to make things smaller:
  - Remember to remove level builder.

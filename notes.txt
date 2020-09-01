@@ -1,25 +1,23 @@
 NOTES:
 <!-- Resources used -->
-<!-- https://gist.github.com/xem/a7ff7215375520d89b73beeabd7b16bd -->
-<!-- https://www.emanueleferonato.com/2014/01/17/creation-of-an-html5-tile-based-platform-game-with-no-engines-behind-pure-code/ -->
-     function drawWall by dazsim https://github.com/dazsim/js13k2020
-Used https://github.com/keithclark/ZzFXM, https://keithclark.github.io/ZzFXM/ for music/sounds
+Robot sprite: purchased sprite pack from https://craftpix.net/product/flying-robot-character-sprites/, used robot 1,
+assembled in Gimp, shrank to 70px, used posturize to reduce colors thus making end file smaller. Also used piskel for some little changes, 
+and tinyPNG to make smaller. 
+
+Man Sprite: https://opengameart.org/content/pixel-art-adventurer-sprites
+
+https://gist.github.com/xem/a7ff7215375520d89b73beeabd7b16bd
+https://www.emanueleferonato.com/2014/01/17/creation-of-an-html5-tile-based-platform-game-with-no-engines-behind-pure-code/
+     
+Music/sounds https://github.com/keithclark/ZzFXM, https://keithclark.github.io/ZzFXM/ 
+
+
+function drawWall by dazsim https://github.com/dazsim/js13k2020
 
 Description: A choose your own adventure game featuring an amnesiac robot.
 
-Might use https://opengameart.org/content/pixel-character-0
-https://opengameart.org/content/pixel-art-adventurer-sprites
-https://opengameart.org/content/building-animation-from-c42
-
-Trophies: https://medium.com/js13kgames/os13k-an-unofficial-trophy-and-music-system-for-js13k-d799bf0ba126
-localStorage[‘OS13kTrophy,Icon,Game Name,Trophy Name’] = Message 
-*** When I put in a trophy it's going to be for finishing and it will be Self Destruct!  Or one for each possible tool?
 
 
-Ways to make things smaller:
- - Remember to remove level builder.
- - remove touch controls 
- - make own weapon pngs 8x8
 
  Bug - bumbing into 2 in map where npc usually is ... 
  need way to ignore 2 in bump when game==2;

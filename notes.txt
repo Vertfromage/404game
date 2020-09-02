@@ -21,3 +21,9 @@ Description: A choose your own adventure game featuring an amnesiac robot.
 
  Bug - bumbing into 2 in map where npc usually is ... 
  need way to ignore 2 in bump when game==2;
+
+ To make work on mobile 
+- chose mobile vs desktop : on start screen set variable
+- way to move character: follow finger  
+- way to say yes/no : double tap 
+- way to use tool : double tap/ button 

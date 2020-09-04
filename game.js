@@ -405,7 +405,7 @@ function inside() {
     if (!t) {
         story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
         choose = "";
-        if(mobile){choose="Hint: Click past where you want to go."}
+        if(mobile){choose="Hint: Tap past where you want to go."}
         if (complete() && game == 1) {
             choose = "Memory restored. Start mission? Y ? N"
             if(mobile){key.x=tileSize*27;key.y=tileSize/2}
@@ -496,9 +496,12 @@ function drawR() {
                 case 4:
                 case 5: c.fillStyle = "#000000"; c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
                     break;
-                case 6: if (game == 1) { level[R][i][j] = 0 } else { if (endG[3] == 3) { c.fillStyle = "#7B4835" } else { c.fillStyle = "#ffdc21" }; c.fillRect(j * tileSize, i * tileSize + tileSize / 2, tileSize / 2, tileSize / 2); }
+                case 6: if (game == 1) { level[R][i][j] = 0; } else{ 
+                    if (endG[3] == 3) { c.fillStyle = "#7B4835" } else { c.fillStyle = "#ffdc21";} c.fillRect(j * tileSize, i * tileSize + tileSize / 2, tileSize / 2, tileSize / 2); }
                     if (p.isClose(j * tileSize, i * tileSize, 1) && (k[32]||toolTap)) { level[R][i][j] = 0; loot++; }
-            }
+                break;
+                }
+            
             if (box == 2 && nI < numnpcs && dead[R][nI] == 0) {
                 if (game == 2 && mob[nI]) {
                     let n = p.x - nI * 5 - tileSize * 2;

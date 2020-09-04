@@ -21,13 +21,14 @@ var tool,
     pCol = 2, // player starting column
     pRow = 12, // player starting row
     ct2 = 0,
-    pS = 5,
+    pS = 3,
     pL = c.width / levelCols,
     gameOver = false,
     testing = false,
     lorR = -1,
-    p = makeSprite(c, 420, 70, "robot.png", 6, 30, c.w/7, c.h/3, 1, pS),
-    key = makeSprite(c, 6, 6, "key.png", 1, 0, c.w-tileSize*2+tileSize/2, tileSize+tileSize/2, 6, 0),
+    time=true,
+    p = makeSprite(c, 420, 70, "robot.png", 6, 30, c.w/7, c.h/3, tileSize/70*2, pS),
+    key = makeSprite(c, 6, 6, "key.png", 1, 0, 0, 0, 6, 0),
     toX, toY = 0,
     onOff = -1, numnpcs = 5,
     npcs = [],
@@ -62,6 +63,7 @@ const songData = [[[.9, 0, 143, , , .35, 3]], [[[0, -1, 1, 8, 6, 4, 1.5, 2.75, 4
 localStorage['OS13kMusic, Robot Mission 404 Song'] = JSON.stringify(songData)
 const buffer = zzfxM(...songData);    // Generate the sample data
 var music = false;
+
 var level = [[      // L1
     [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
     [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
@@ -144,7 +146,7 @@ var level = [[      // L1
     [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
     [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 1],
     [1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1],
@@ -188,7 +190,7 @@ setInterval(e => {
 onclick = e => {
     x = e.pageX; y = e.pageY;
     switch (s) {
-        case 0: if(x>a.width/2){mobile=true;} if (!music) { const node = zzfxP(...buffer); node.loop = true; music = true; }
+        case 0: if(x>a.width/2){mobile=true;p.s=5;} if (!music) { const node = zzfxP(...buffer); node.loop = true; music = true; }
             toX = p.x = c.w / 4; toY = p.y = c.h / 2; p.switch(0); s = 1;
             break;
         case 1: if(mobile){toX = x; toY = y;done=false;}
@@ -203,7 +205,7 @@ onclick = e => {
             break;
         case 3: // react to clicks on screen 3
             break;
-        case 4: p.x= c.w/7; p.y= c.h/3; s=0;
+        case 4: p.x= c.w/7; p.y= c.h/3; p.switch(0); s=0;
         case 5: toX = x; toY = y; tapped(x, y, false); break;
     }
 }
@@ -240,7 +242,7 @@ function title() {
     tx("Fly around, talk to the town's people to fill in the blanks, and then carry out your mission.", c.w / 2, c.h * .62, 1.7, '#dc21ff');
     tx('Start Mission! Desktop', c.w/3, c.h * .75, 3, '#f5e2b4');
     tx('Start Mission! Mobile', c.w/3*2, c.h * .75, 3, '#f5e2b4');
-    tx('arrows or awsd, space, y, n', c.w / 3, c.h * .85, 1.5, '#f5e2b4');
+    tx('arrows or awsd, space, y, n, +/- speed.', c.w / 3, c.h * .85, 1.5, '#f5e2b4');
     tx('landscape, tap to move, button to interact.', c.w / 3*2, c.h * .85, 1.5, '#f5e2b4');
 
 
@@ -310,6 +312,9 @@ function street() {
     tx('Robot Mission 404', c.w / 2, c.h * .65, 5, "#FFDC21");
     story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
     tx(story, c.w / 2, c.h * .75, 2, "#f5e2b4");
+    let dir;
+    if(mobile){dir = 'landscape, tap to move, button to interact.';}else{dir='arrows or awsd, space, y, n, +/- speed.';}
+    tx("Controls: "+dir, c.w /2, c.h * .8, 1.5, '#f5e2b4');
     if (!bdBoom) {
         if(!mobile){
         keyMove();}else if(!done){touchMove(toX,toY);}else{
@@ -326,6 +331,7 @@ function street() {
         bdTNT();
     }
     p.render();
+    if(!mobile){speed();}
 }
 
 function building() {
@@ -358,12 +364,14 @@ function inside() {
     c.h = a.height;
     drawR();
     questTrophy();
+    if(mobile&&game==1){key.x=c.w-tileSize*2+tileSize/2; key.y=tileSize+tileSize/2}
     //npc
     let t = false;
     for (i = 0; i < npcs.length; i++) {
         if (p.isClose(npcs[i].x, npcs[i].y, 1)) {
             // check for game state... adventure vs endgame.
             if (game == 1) {
+                if(mobile){key.x=tileSize*21;key.y=tileSize/2}
                 story = speak[i] + choices[R][i] + "!";
                 choose = "Incoporate into memory file? Y or N";
                 t = true;
@@ -377,9 +385,6 @@ function inside() {
                 } else if (i == 4 && k[78] || (k[89]||toolTap)) {
                     data[2] = "404";
                     choose = "404 data corrupted!"
-                }
-                if ((k[89]||toolTap) || k[78]) {
-                    story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
                 }
             } if (game == 2 && !mob[i] && dead[R][i] == 0 && !(R == 4)) {
                 {
@@ -400,8 +405,10 @@ function inside() {
     if (!t) {
         story = 'Mission: Enter ' + data[0] + ' as ' + data[1] + ' use ' + data[2] + ' to ' + data[3];
         choose = "";
+        if(mobile){choose="Hint: Click past where you want to go."}
         if (complete() && game == 1) {
             choose = "Memory restored. Start mission? Y ? N"
+            if(mobile){key.x=tileSize*27;key.y=tileSize/2}
             if (k[89]||toolTap) {
                 makeTool();
                 game = 2;
@@ -412,6 +419,7 @@ function inside() {
             if (loot > 0) { if (endG[3] == 3) { choose += " Brownies: " + loot; } else { choose += " Loot: " + loot; } }
             if (nDead > 0) { choose += " Dead: " + nDead }
         }
+        
     }
     if (game == 2) {
         win();
@@ -436,28 +444,41 @@ function inside() {
         p.seq = [1, 0];
         p.update();
         p.seq = [];
+        p.y += p.s;
     }
     if(mobile){key.render();}
     
 
     bump(p);
 
-    tx(story, a.width / 2, c.h * .06, 1.7, "#FFDC21");
-    tx(choose, a.width / 2, c.h * .11, 1.5, '#f5e2b4');
+    tx(story, a.width / 2, c.h * .05, 1.7, "#FFDC21");
+    tx(choose, a.width / 2, c.h * .09, 1.5, '#f5e2b4');
+
     let tile = a.width / levelCols
     if (p.y > tile * 12 && p.x < tile * 1 + tile / 4) {
         s = 3;
     }
     // if game==2 check for mission complete, if complete story = mission complete s=4
     if (health < 0) { story = "Damage Sustained,"; choose = "Failure"; s = 4 };
-    
+    if(!mobile){speed();}
+}
+function speed(){
+    if((k[187]||k[61])&&p.s<5&&time){time=false;p.s++; setTimeout(() => {time=true;}, 500);}
+    if((k[189]||k[173])&&p.s>1&&time){time=false;p.s--;setTimeout(() => {time=true;}, 500);}
 }
 function drawR() {
-    c.fillStyle = "#99A5FE";
-    c.fillRect(0, 0, a.width, a.height);
     tileSize = a.width / levelCols;
 
-    // converting X player position from tiles to pixels
+    //background
+    c.fillStyle = "#99A5FE";
+    c.fillRect(0, 0, a.width, a.height);
+    
+    for (i = 0; i < levelRows/4; i++) {
+        for (j = 0; j < levelCols/4; j++) {
+            drawWall(c, j * tileSize*4+tileSize/2, i * tileSize*4+tileSize/2, tileSize*4,"#c6cdff", "#99A5FE");
+        }}
+    
+    // converting from tiles to pixels
     c.width = tileSize * levelCols;   // canvas width. Won't work without it even if you style it from CSS
     c.height = tileSize * levelRows; // canvas height. Same as before
 
@@ -514,12 +535,7 @@ function questTrophy(){
 // Writen by workshopcraft https://github.com/dazsim/js13k2020
 function drawWall(c, x, y, s, primary, secondary) {
     c.fillStyle = secondary
-    c.shadowOffsetY = -4;
-    c.shadowColor = "black";
-    c.shadowBlur = 6;
     c.fillRect(x, y, s, s)
-    c.shadowOffsetY = 0;
-    c.shadowBlur = 0;
 
     c.strokeStyle = primary
     c.lineWidth = 4
@@ -800,8 +816,8 @@ function sprite(options) {
     };
 
     that.render = function () {
-        that.context.shadowOffsetX = -6;
-        that.context.shadowOffsetY = -3;
+        that.context.shadowOffsetX = -3;
+        that.context.shadowOffsetY = -1;
         that.context.shadowColor = "black";
         that.context.shadowBlur = 3;
 
@@ -857,12 +873,14 @@ function makeSprite(c, w, h, img, f, t, x, y, r, s) {
 
 function spawnnpc() {
     let i = npcs.length;
-    npcs[i] = makeSprite(c, 168, 22, "man3.png", 6, 5, 0, 0, 1.5, 2);
+    npcs[i] = makeSprite(c, 168, 22, "man3.png", 6, 10, 0, 0, tileSize/22, 2);
     npcs[i].dead = false;
 }
 function spawnb() {
     bd[bd.length] = makeSprite(c, 270, 24, "build.png", 9, 20, 0, 0, 0, 0);
 }
+
+
 
 function tx(t, w, h, f, s) {
     c.textAlign = 'center';

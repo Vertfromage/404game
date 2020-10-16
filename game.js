@@ -59,7 +59,7 @@ var story,
     done =true,
     bdBoom= toolTap = mobile = false;
 //sound Not sure if it's worth the space it takes. Mutated Depp sample
-const songData = [[[.9, 0, 143, , , .35, 3]], [[[0, -1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0], [0, 1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0]], [[0, -1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1], [0, 1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1]]], [1, 1, 0, 0, 1, 0], 60, { title: "baBoot", author: "Vertfromage" }];
+const songData = [[[.9, 0, 143, , , .35, 3]], [[[0, -1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0], [0, 1, 1, 8, 6, 4, 1.5, 2.75, 4, , 5, , 6, 4, , 5, , 6, -1, 0, 0, 0]], [[0, -1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1], [0, 1, 20, , 21, 18, , 18, 20, , 21, 18, , 18, , 18, , 18, 20, , 21, , 20, , 21, 18, , 12, 0, 0, 0, -1, 3.5, 12, 12, 5, , 10, , 10, 5, , 8, , 0, 0, 0, 3.5, 12, , , -1]]], [1, 1, 0, 0, 1, 0], 60];
 localStorage['OS13kMusic, Robot Mission 404 Song'] = JSON.stringify(songData)
 const buffer = zzfxM(...songData);    // Generate the sample data
 var music = false;
@@ -262,13 +262,13 @@ function endScreen() {
     tx(story, a.width / 2, a.height / 2, 6, "#FFDC21");
     tx(choose, a.width / 2, a.height * .65, 4, '#f5e2b4');
     tx("Click to restart.", a.width / 2, a.height * .75, 3, '#f5e2b4');
-    localStorage['OS13kTrophy,👾,Robot Mission 404, Mission Complete']
-    if (health == 100) { localStorage["OS13kTrophy,💖,Robot Mission 404, Perfect Health"] }
-    if (nDead = 0) { localStorage['OS13kTrophy,🕊,Robot Mission 404, Angel of Peace'] }
-    if (nDead == 25) { localStorage['OS13kTrophy,💀,Robot Mission 404, Death Robot'] }
-    if (nDead == 25 && nLoot == 30 && health < 100) { localStorage['OS13kTrophy,🥈,Robot Mission 404, Loot & Pillage'] = "Now try for 100% health." }
-    if (nDead == 25 && health > 99 && nLoot == 30) { localStorage['OS13kTrophy,🏆,Robot Mission 404, Max Combo'] }
-    if (document.monetization && document.monetization.state === 'started') { localStorage['OS13kTrophy,👑,Robot Mission 404, Coil Subscriber'] }
+    localStorage['OS13kTrophy,👾,Robot Mission 404, Mission Complete']='';
+    if (health == 100) { localStorage["OS13kTrophy,💖,Robot Mission 404, Perfect Health"]=''}
+    if (nDead == 0) { localStorage['OS13kTrophy,🕊,Robot Mission 404, Angel of Peace']=''}
+    if (nDead == 25) { localStorage['OS13kTrophy,💀,Robot Mission 404, Death Robot']=''}
+    if (nDead == 25 && nLoot == 30 && health < 100) { localStorage['OS13kTrophy,🥈,Robot Mission 404, Loot & Pillage'] = 'Now try for 100% health.' }
+    if (nDead == 25 && health > 99 && nLoot == 30) { localStorage['OS13kTrophy,🏆,Robot Mission 404, Max Combo']=''}
+    if (document.monetization && document.monetization.state === 'started') { localStorage['OS13kTrophy,👑,Robot Mission 404, Coil Subscriber']=''}
 }
 
 function street() {

@@ -1,6 +1,9 @@
 ## Robot Mission 404
 Submission for js13kgames
 
+
+***OPEN FOR HACKTOBERFEST 2021! I thought it would be fun to open up this old project for hacktoberfest contributions... I'm going to make a contributing.md file so check that out.
+
 A choose your own adventure game.
 
 You're an amnesiac robot with corrupted mission data. Fly around, talk to the town's people to fill in the blanks, and then carry out your mission.
